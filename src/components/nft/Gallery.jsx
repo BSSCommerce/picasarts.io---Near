@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import * as nearAPI from 'near-api-js';
-import { parseNearAmount, token2symbol, getTokenOptions, handleOffer } from '../state/near';
+import { parseNearAmount, token2symbol, getTokenOptions, handleOffer } from '../../state/near';
 import {
 	formatAccountId,
-} from '../utils/near-utils';
-import { getMarketStoragePaid, loadItems } from '../state/views';
-import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../state/actions';
-import { useHistory } from '../utils/history';
+} from '../../utils/near-utils';
+import { getMarketStoragePaid, loadItems } from '../../state/views';
+import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../../state/actions';
+// import { useHistory } from '../../utils/history';
 import {Token} from './Token';
 
 
@@ -55,9 +55,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 	// path to token
 	const [path, setPath] = useState(window.location.href);
-	useHistory(() => {
-		setPath(window.location.href);
-	});
+	// useHistory(() => {
+	// 	setPath(window.location.href);
+	// });
 	let tokenId;
 	let pathSplit = path.split(PATH_SPLIT)[1];
 	if (allTokens.length && pathSplit?.length) {

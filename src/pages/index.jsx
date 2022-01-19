@@ -4,17 +4,20 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-// import ProTip from '../ProTip';
-// import Link from '../Link';
-// import Copyright from '../Copyright';
+import { appStore, onAppMount} from '../state/app';
+import {useContext, useEffect} from "react";
+import { Sales } from "../components/nft/Sales";
 
 export default function Index() {
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const { dispatch, state, update } = useContext(appStore);
+    const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+    const onMount = () => {
+        dispatch(onAppMount());
+    };
+    useEffect( () => {
+        onMount()
+    }, []);
     return (
         <>
             {/* Hero unit */}
@@ -52,8 +55,7 @@ export default function Index() {
                 </Container>
             </Box>
             <Container sx={{ py: 8 }} maxWidth="md">
-                {/* End hero unit */}
-                <Grid container spacing={4}>
+                {/*<Grid container spacing={4}>
                     {cards.map((card) => (
                         <Grid item key={card} xs={12} sm={6} md={4}>
                             <Card
@@ -84,7 +86,11 @@ export default function Index() {
                             </Card>
                         </Grid>
                     ))}
-                </Grid>
+
+
+                </Grid>*/}
+
+                <Sales {...{ app, views, update, loading, contractAccount, account, dispatch }} />
             </Container>
         </>
     );

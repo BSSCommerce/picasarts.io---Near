@@ -17,14 +17,16 @@ const {
 	InMemorySigner,
 } = nearAPI;
 
-export const near = new Near({
-	networkId,
-	nodeUrl,
-	walletUrl,
-	deps: {
-		keyStore: new keyStores.BrowserLocalStorageKeyStore()
-	},
-});
+// export const near = new Near({
+// 	networkId,
+// 	nodeUrl,
+// 	walletUrl,
+// 	deps: {
+// 		keyStore: new keyStores.BrowserLocalStorageKeyStore()
+// 	},
+// });
+
+let near = null;
 
 // alias
 export const contractId = contractName;
@@ -47,9 +49,15 @@ export function getContract(account, methods = contractMethods) {
 }
 
 export const getWallet = async () => {
-	const contractId = 'app-name.account-id.near';
+	near = new Near({
+		networkId,
+		nodeUrl,
+		walletUrl,
+		deps: {
+			keyStore: new keyStores.BrowserLocalStorageKeyStore()
+		},
+	});
 	const wallet = new WalletAccount(near);
-
 	// walletAccount instance gets access key for contractId
 	
 	const contractAccount = new Account(near.connection, contractName);

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useContext} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,8 +16,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase'
 const pages = ['Explore', 'My Collections', 'Create'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-
+import { appStore } from '../../state/app';
+import {Wallet} from "../nft/Wallet";
+import NextLink from 'next/link';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -62,6 +63,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [profile, setProfile] = useState(false);
+    const { state, dispatch } = useContext(appStore);
+
+    const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+
+    const signedIn = ((wallet && wallet.signedIn));
+
+    if (profile && !signedIn) {
+        setProfile(false);
+    }
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -121,7 +132,7 @@ const ResponsiveAppBar = () => {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                                <MenuItem  key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
                             ))}
@@ -161,9 +172,9 @@ const ResponsiveAppBar = () => {
 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                            </IconButton>
+                            {/*<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>*/}
+                                {!signedIn ? <Wallet {...{ wallet, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account,  }} />}
+                            {/*</IconButton>*/}
                         </Tooltip>
                         <Menu
                             sx={{ mt: '45px' }}

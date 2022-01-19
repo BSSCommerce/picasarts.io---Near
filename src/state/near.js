@@ -2,6 +2,7 @@ import React from 'react';
 import getConfig from '../config';
 import * as nearAPI from 'near-api-js';
 import { getWallet, postSignedJson } from '../utils/near-utils';
+import {Select, MenuItem, FormControl} from "@mui/material";
 
 export const {
 	GAS,
@@ -35,7 +36,7 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	};
 
 	wallet.signedIn = wallet.isSignedIn();
-    
+
 	let account;
 	if (wallet.signedIn) {
 		account = wallet.account();
@@ -55,19 +56,26 @@ export const updateWallet = () => async ({ update, getState }) => {
 
 export const token2symbol = {
 	"near": "NEAR",
-	// "dai": "DAI",
-	// "usdc": "USDC",
-	// "usdt": "USDT",
+	"dai": "DAI",
+	"usdc": "USDC",
+	"usdt": "USDT",
 };
 
 const allTokens = Object.keys(token2symbol);
 
-export const getTokenOptions = (value, setter, accepted = allTokens) => (
-	<select value={value} onChange={(e) => setter(e.target.value)}>
+export const getTokenOptions = (value, setter, accepted = allTokens) => (<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+	<Select
+		labelId="demo-simple-select-label"
+		id="demo-simple-select"
+		value={value}
+		onChange={(e) => setter(e.target.value)}
+		label="Age"
+	>
 		{
-			accepted.map((value) => <option key={value} value={value}>{token2symbol[value]}</option>)
+			accepted.map((value) => <MenuItem key={value} value={value}>{token2symbol[value]}</MenuItem>)
 		}
-	</select>);
+	</Select></FormControl>
+	);
 
 
 export const handleOffer = async (account, token_id, offerToken, offerPrice) => {

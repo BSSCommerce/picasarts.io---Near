@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as nearAPI from 'near-api-js';
-import { snackAttack } from '../state/app';
-import { share } from '../utils/mobile';
-import { explorerUrl, token2symbol, getTokenOptions, handleOffer } from '../state/near';
+import { snackAttack } from '../../state/app';
+import { share } from '../../utils/mobile';
+import { explorerUrl, token2symbol, getTokenOptions, handleOffer } from '../../state/near';
 
 const {
 	utils: { format: { formatNearAmount } }

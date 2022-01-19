@@ -16,14 +16,15 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
-    "next": "latest",
-    "prop-types": "latest",
     "bn": "^1.0.5",
     "copy-to-clipboard": "^3.3.1",
     "near-api-js": "^0.41.0",
     "near-seed-phrase": "^0.1.0",
+    "next": "latest",
+    "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-dropzone": "^11.5.1"
   },
   "devDependencies": {
     "eslint": "latest",

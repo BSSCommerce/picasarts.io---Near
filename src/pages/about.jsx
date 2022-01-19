@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ProTip from '../ProTip';
-import Link from '../Link';
+import Link from '../components/layout/Link';
 import Copyright from '../Copyright';
 
 export default function About() {

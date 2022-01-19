@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-
+import Button from "@mui/material/Button";
 import * as nearAPI from 'near-api-js';
-import { updateWallet } from '../state/near';
+import { updateWallet } from '../../state/near';
 import {
 	getContract,
 	contractMethods,
 	GAS
-} from '../utils/near-utils';
+} from '../../utils/near-utils';
 const {
 	KeyPair,
 	utils: { PublicKey,
@@ -21,18 +21,14 @@ export const Wallet = ({ wallet, account, update, dispatch, handleClose }) => {
 	const [proceeds, setProceeds] = useState('0');
 
 	if (wallet && wallet.signedIn) {
-		return <>
-			<h3>Wallet</h3>
-			<p>Balance: { wallet.balance } N</p>
-			<br />
-			<button onClick={handleClose}>Close</button>
-			<br />
-			<button onClick={() => wallet.signOut()}>Sign Out</button>
-		</>;
+		return <div style={{display: "flex"}}>
+			<h4> {account.accountId} | { wallet.balance } N</h4>
+			<Button color="inherit" onClick={() => wallet.signOut()}>Sign Out</Button>
+		</div>;
 	}
 
-	return <>
-		<button onClick={() => wallet.signIn()}>Connect Wallet</button>
-	</>;
+	return (
+	<Button color="inherit" onClick={() => wallet.signIn()}>Connect Wallet</Button>
+	)
 };
 
