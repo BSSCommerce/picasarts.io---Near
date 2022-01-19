@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import {getTokenOptions, handleOffer, token2symbol} from "../../state/near";
 import {handleAcceptOffer} from "../../state/actions";
+import { loadItem } from '../../state/views';
 import * as nearAPI from "near-api-js";
 
 const {
@@ -24,8 +25,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     const router = useRouter();
     let accountId = '';
     if (account) accountId = account.accountId;
-    const { sales } = views
-    const [token, setToken ] = useState(false);
+    const { currentToken } = views
 
     /// market
     const [offerPrice, setOfferPrice] = useState('');
@@ -33,11 +33,8 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
 
     useEffect(() => {
-        const {id} = router.query;
-        let currentToken = sales.find(({ token_id }) => id === token_id);
-        console.log(sales, currentToken);
-        setToken(currentToken);
-    }, [token])
+        dispatch(loadItem(account, router.query.id));
+    }, [])
 
     return (
         <Box
@@ -47,7 +44,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                 pb: 6,
             }}
         >
-            { token && <Container maxWidth="lg">
+            { currentToken && <Container maxWidth="lg">
                 <Card sx={{ display: 'flex' }}>
                     <CardMedia
                         component="img"

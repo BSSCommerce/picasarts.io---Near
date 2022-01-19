@@ -17,6 +17,7 @@ const initialState = {
 		tokens: [],
 		sales: [],
 		allTokens: [],
+		currentToken: null
 	}
 };
 let snackTimeout;
