@@ -14,11 +14,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase'
-const pages = ['Explore', 'My Collections', 'Create'];
+const pages = ['Explore', 'My Collections', 'Create', "Resource", "Stats"];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 import { appStore } from '../../state/app';
 import {Wallet} from "../nft/Wallet";
 import NextLink from 'next/link';
+import {useRouter} from "next/router";
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -88,19 +90,40 @@ const ResponsiveAppBar = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+    const pageList = pages.map((page) => {
+            let url = "/";
+            if (page == pages[0]) {
+                url = "/";
+            } else if (page == pages[1]) {
+                url = "/my-collectives";
+            } else {
+                url = "/create"
+            }
+            return <MenuItem key={page} onClick={handleCloseNavMenu}>
 
+                <NextLink href={url} as={url}>
+                    <Typography textAlign="center">{page}</Typography>
+                </NextLink>
+
+
+            </MenuItem>
+        })
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-                    >
-                        LOGO
-                    </Typography>
+
+                        <NextLink href={"/"} as={`/`}>
+                            <Typography
+                                variant="h6"
+                                noWrap
+                                component="div"
+                                sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+                            >
+                                LOGO
+                            </Typography>
+                        </NextLink>
+
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
@@ -131,11 +154,7 @@ const ResponsiveAppBar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem  key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
-                            ))}
+                            {pageList}
                         </Menu>
                     </Box>
 
@@ -159,15 +178,7 @@ const ResponsiveAppBar = () => {
                         </Search>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
+                        {pageList}
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>

@@ -1,14 +1,21 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 
-export default function ImageUpload(props) {
+export default function ImageUpload({setMedia}) {
+    const onDrop = useCallback(acceptedFiles => {
+        let file = acceptedFiles[0];
+        setMedia(file);
+    }, [])
     const {
         acceptedFiles,
         fileRejections,
         getRootProps,
         getInputProps
     } = useDropzone({
-        accept: 'image/jpeg, image/png'
+        accept: 'image/jpeg, image/png',
+        maxFiles: 1,
+        maxSize: 10000000,
+        onDrop
     });
 
     const acceptedFileItems = acceptedFiles.map(file => (

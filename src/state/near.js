@@ -56,15 +56,16 @@ export const updateWallet = () => async ({ update, getState }) => {
 
 export const token2symbol = {
 	"near": "NEAR",
-	"dai": "DAI",
-	"usdc": "USDC",
-	"usdt": "USDT",
+	// "dai": "DAI",
+	// "usdc": "USDC",
+	// "usdt": "USDT",
 };
 
 const allTokens = Object.keys(token2symbol);
 
-export const getTokenOptions = (value, setter, accepted = allTokens) => (<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+export const getTokenOptions = (value, setter, accepted = allTokens) => (
 	<Select
+		variant="standard"
 		labelId="demo-simple-select-label"
 		id="demo-simple-select"
 		value={value}
@@ -74,7 +75,7 @@ export const getTokenOptions = (value, setter, accepted = allTokens) => (<FormCo
 		{
 			accepted.map((value) => <MenuItem key={value} value={value}>{token2symbol[value]}</MenuItem>)
 		}
-	</Select></FormControl>
+	</Select>
 	);
 
 

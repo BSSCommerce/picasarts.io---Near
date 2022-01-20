@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {useTheme} from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import React, {useEffect, useState} from "react";
 import {
     Box,
@@ -9,10 +9,14 @@ import {
     CardContent,
     Typography,
     FormControl,
-    Button, TextField
+    Button,
+    TextField,
+    Grid,
+    Paper
 } from "@mui/material";
-import {getTokenOptions, handleOffer, token2symbol} from "../../state/near";
-import {handleAcceptOffer} from "../../state/actions";
+import {getTokenOptions, handleOffer, parseNearAmount, token2symbol} from "../../state/near";
+import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
+import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import { loadItem } from '../../state/views';
 import * as nearAPI from "near-api-js";
 
@@ -22,20 +26,32 @@ const {
 
 export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
     if (!contractAccount) return null;
+    const {nearToUsd} = app;
     const router = useRouter();
     let accountId = '';
     if (account) accountId = account.accountId;
-    const { currentToken } = views
+    //const { currentToken } = views
+    const { tokens, sales, allTokens } = views
+    const [token, setToken ] = useState(false);
 
     /// market
     const [offerPrice, setOfferPrice] = useState('');
     const [offerToken, setOfferToken] = useState('near');
 
+    /// updating user tokens
+    const [price, setPrice] = useState('');
+    const [ft, setFT] = useState('near');
+    const [saleConditions, setSaleConditions] = useState({});
 
+    // useEffect(() => {
+    //     dispatch(loadItem(account, router.query.id));
+    // }, [])
     useEffect(() => {
-        dispatch(loadItem(account, router.query.id));
-    }, [])
-
+        const {id} = router.query;
+        let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
+        let currentToken = market.find(({ token_id }) => id === token_id);
+        setToken(currentToken);
+    }, [token])
     return (
         <Box
             sx={{
@@ -44,74 +60,129 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                 pb: 6,
             }}
         >
-            { currentToken && <Container maxWidth="lg">
-                <Card sx={{ display: 'flex' }}>
-                    <CardMedia
-                        component="img"
-                        sx={{ width: "60%" }}
-                        image="https://crustwebsites.net/ipfs/QmZ97Lkjc2cmjKHqdzLQQtNt8gDXuKgDuSQC1X7gwkdZgR"
-                        alt="Live from space album cover"
-                    />
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <CardContent sx={{ flex: '1 0 auto' }}>
+            { token && <Container maxWidth="lg">
+                <Grid container columns={{ xs: 12 }} spacing={2}>
+                    <Grid item xs={6}>
+                        <img style={{width: "100%"}} src={token.metadata.media} onLoad={() => {}} onError={
+                            ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
+                        } />
+                    </Grid>
+                    <Grid item xs={6}>
+
                             <Typography component="div" variant="h5">
                                 Author
                             </Typography>
                             <Typography component="p">
                                 {token.owner_id}
                             </Typography>
-                            { Object.keys(token.sale_conditions).length > 0 && <>
-                                <h4>Royalties</h4>
-                                {
-                                    Object.keys(token.royalty).length > 0 ?
-                                        Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
-                                            {receiver} - {amount / 100}%
-                                        </div>)
-                                        :
-                                        <p>This token has no royalties.</p>
-                                }
 
-                                {
-                                    Object.keys(token.sale_conditions).length > 0 && <>
-                                        <h4>Sale Conditions</h4>
-                                        {
-                                            Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
-                                                {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-                                            </div>)
-                                        }
-                                        {
-                                            accountId.length > 0 && accountId !== token.owner_id && <>
-                                                <TextField id="filled-basic" label="Price" variant="standard" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
-                                                {
-                                                    getTokenOptions(offerToken, setOfferToken, Object.keys(token.sale_conditions))
-                                                }
-                                                <Button onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
-                                            </>
-                                        }
-                                    </>
-                                }
-                                {
-                                    Object.keys(token.bids).length > 0 && <>
-                                        <h4>Offers</h4>
-                                        {
-                                            Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
-                                                <div>
-                                                    {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
-                                                </div>
-                                                {
-                                                    accountId === token.owner_id &&
-                                                    <button onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</button>
-                                                }
-                                            </div>) )
-                                        }
-                                    </>
-                                }
-                            </>
+                            <h4>Royalties</h4>
+                            {
+                                token.royalty && Object.keys(token.royalty).length > 0 ?
+                                    Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
+                                        {receiver} - {amount / 100}%
+                                    </div>)
+                                    :
+                                    <p>This token has no royalties.</p>
                             }
-                        </CardContent>
 
-                    </Box>
-                </Card>
+
+
+                            {
+                                token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
+                                    <h4>Price</h4>
+                                    <CurrencySymbol url={"near-logo.svg"} />{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
+                                    <br/>
+                                    {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
+                                </div>) : ""
+                            }
+
+
+                            {
+                                accountId === token.owner_id && <>
+                                    <div>
+                                        <h4>Add Price</h4>
+                                        <Grid container columns={{ xs: 12 }} spacing={2}>
+                                            <Grid item xs={3}>
+                                                    <TextField  variant={"standard"} type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                    {
+                                                        getTokenOptions(ft, setFT)
+                                                    }
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                    <Button onClick={() => {
+                                                        if (!price.length) {
+                                                            return alert('Enter a price');
+                                                        }
+                                                        const newSaleConditions = {
+                                                            ...saleConditions,
+                                                            [ft]: parseNearAmount(price)
+                                                        }
+                                                        setSaleConditions(newSaleConditions);
+                                                        setPrice('');
+                                                        setFT('near');
+                                                        handleSaleUpdate(account, token_id, newSaleConditions);
+                                                    }}>Add</Button>
+                                            </Grid>
+                                        </Grid>
+
+
+
+                                    </div>
+                                    <div>
+                                        <i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
+                                    </div>
+                                </>
+                            }
+                            {
+                                accountId.length > 0 && accountId !== token.owner_id && <div>
+                                    <h4>Add Offer</h4>
+                                    <Grid container columns={{ xs: 12 }} spacing={2}>
+                                        <Grid item xs={4}>
+                                            <TextField variant={"standard"} placeholder="Price" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            {
+                                                getTokenOptions(offerToken, setOfferToken, Object.keys(token.sale_conditions))
+                                            }
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Button  onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
+                                        </Grid>
+
+                                    </Grid>
+                                </div>
+                            }
+
+                            {
+                                token.bids && Object.keys(token.bids).length > 0 && <>
+                                    <h4>Offers</h4>
+                                    {
+                                        Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
+                                            <p>
+                                                {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
+                                                <br/>
+                                                {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
+                                            </p>
+                                            {
+                                                accountId === token.owner_id &&
+                                                <Button variant={"contained"} onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</Button>
+                                            }
+                                        </div>) )
+                                    }
+                                </>
+                            }
+
+                            <h4>Description</h4>
+                            <p>
+                                {token.metadata.description}
+                            </p>
+                    </Grid>
+
+
+                </Grid>
             </Container> }
         </Box>
 

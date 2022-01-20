@@ -128,9 +128,10 @@ export const loadItems = (account) => async ({ update, getState }) => {
 };
 
 export const loadItem = (account, tokenId) => async ({ update, getState }) => {
-    const { contractAccount } = getState()
-    let currentToken = await contractAccount.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + tokenId }).catch(() => { });
+    const { contractAccount } = getState();
+    console.log(contractId + ":" + tokenId);
+    let currentToken = await contractAccount.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + tokenId }).catch((e) => { console.log(e)});
     console.log(currentToken)
     update('views', { currentToken });
-    return { currentToken }
+    return { currentToken };
 };

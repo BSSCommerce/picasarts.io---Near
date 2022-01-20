@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { appStore, onAppMount } from '../state/app';
-import { Contract } from 'src/components/nft/Contract';
+import { Minting } from 'src/components/nft/Minting';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import {Grid} from "@mui/material";
@@ -36,7 +36,7 @@ const Create = () => {
         >
 
             {
-                signedIn && <Contract {...{ near, update, wallet, account }} />
+                signedIn && <Minting {...{ near, update, wallet, account }} />
 
             }
 

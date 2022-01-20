@@ -7,6 +7,7 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCache';
 import ResponsiveAppBar from "../components/layout/ResponsiveAppBar";
+import "../public/css/style.css"
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 import { appStore, onAppMount, AppProvider} from '../state/app';

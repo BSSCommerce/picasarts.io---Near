@@ -8,6 +8,7 @@ const initialState = {
 		tab: 1,
 		sort: 2,
 		filter: 1,
+		nearToUsd: 0
 	},
 	near: {
 		initialized: false,
@@ -25,7 +26,9 @@ let snackTimeout;
 export const { appStore, AppProvider } = State(initialState, 'app');
 
 export const onAppMount = () => async ({ update, getState, dispatch }) => {
-	update('app', { mounted: true });
+	let nearToUsdReq = await fetch("https://api.diadata.org/v1/foreignQuotation/CoinMarketCap/NEAR");
+	let nearToUsdRes = await nearToUsdReq.json();
+	update('app', { mounted: true, nearToUsd: nearToUsdRes.Price });
 	dispatch(initNear());
 };
 

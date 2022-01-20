@@ -1,12 +1,12 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
-
-export const handleMint = async (account, royalties, media, validMedia) => {
-    if (!media.length || !validMedia) {
+import uploadToCrust from "src/utils/crust/crust";
+export const handleMint = async (account, royalties, media, validMedia, title, description) => {
+    if (!media) {
         alert('Please enter a valid Image Link. You should see a preview below!');
         return;
     }
-
+    const {cid, path} = await uploadToCrust( media );
     // shape royalties data for minting and check max is < 20%
     let perpetual_royalties = Object.entries(royalties).map(([receiver, royalty]) => ({
         [receiver]: royalty * 100
@@ -15,8 +15,10 @@ export const handleMint = async (account, royalties, media, validMedia) => {
         return alert('Cannot add more than 20% in perpetual NFT royalties when minting');
     }
     
-    const metadata = { 
-        media,
+    const metadata = {
+        title: title,
+        description: description,
+        media: path,
         issued_at: Date.now()
     };
     const deposit = parseNearAmount('0.1');
