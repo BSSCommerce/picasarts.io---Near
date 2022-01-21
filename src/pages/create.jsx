@@ -3,8 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { appStore, onAppMount } from '../state/app';
 import { Minting } from 'src/components/nft/Minting';
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import {Grid} from "@mui/material";
 
 
 const Create = () => {

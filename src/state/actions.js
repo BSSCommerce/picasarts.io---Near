@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
-import uploadToCrust from "src/utils/crust/crust";
+import { uploadToCrust } from "near-crust-ipfs";
 export const handleMint = async (account, royalties, media, validMedia, title, description) => {
     if (!media) {
         alert('Please enter a valid Image Link. You should see a preview below!');

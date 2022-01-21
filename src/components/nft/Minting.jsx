@@ -38,10 +38,9 @@ export const Minting = ({ near, update, account }) => {
 			<Grid container spacing={2}>
 				<Grid item xs={8}>
 					<h4>Mint Something</h4>
-
-					<TextField fullWidth placeholder={"title"} value={title} onChange={(e) => setTitle(e.target.value)} />
+					<TextField variant={"standard"} fullWidth placeholder={"title"} value={title} onChange={(e) => setTitle(e.target.value)} />
 					<br/>
-					<TextField fullWidth placeholder={"description"} value={description} onChange={(e) => setDescription(e.target.value)}  />
+					<TextField variant={"standard"} fullWidth placeholder={"description"} value={description} onChange={(e) => setDescription(e.target.value)} multiline={true} />
 					<br/>
 					<ImageUpload setMedia={setMedia}/>
 					{/*<TextField className="full-width" placeholder="Image Link" value={media} onChange={(e) => setMedia(e.target.value)} />*/}
@@ -61,15 +60,15 @@ export const Minting = ({ near, update, account }) => {
 							:
 							<p>No royalties added yet.</p>
 					}
-					<TextField className="full-width" placeholder="Account ID" value={receiver} onChange={(e) => setReceiver(e.target.value)} />
-					<TextField type="number" className="full-width" placeholder="Percentage" value={royalty} onChange={(e) => setRoyalty(e.target.value)} />
+					<TextField variant={"standard"} placeholder="Account ID" value={receiver} onChange={(e) => setReceiver(e.target.value)} />
+					<TextField variant={"standard"} type="number" placeholder="Percentage" value={royalty} onChange={(e) => setRoyalty(e.target.value)} />
 					<Button variant={"text"} onClick={async () => {
 						const exists = await isAccountTaken(receiver);
 						if (!exists) return alert(`Account: ${receiver} does not exist on ${networkId ==='default' ? 'testnet' : 'mainnet'}.`);
 						setRoyalties(Object.assign({}, royalties, {
 							[receiver]: royalty
 						}));
-					}}>Add Royalty</Button>
+					}}>Add</Button>
 
 					<div className="line"></div>
 					<br/>

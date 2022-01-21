@@ -19,7 +19,7 @@ import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
 import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import { loadItem } from '../../state/views';
 import * as nearAPI from "near-api-js";
-
+import nearLogo from "../../public/static/img/near-logo.png";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -91,7 +91,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                             {
                                 token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
                                     <h4>Price</h4>
-                                    <CurrencySymbol url={"near-logo.svg"} />{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
+                                    <CurrencySymbol url={nearLogo} />{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
                                     <br/>
                                     {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
                                 </div>) : ""

@@ -7,11 +7,10 @@ const myLoader = ({ src, width, quality }) => {
 export const CurrencySymbol = ({url}) => {
     return (
         <Image
-            loader={myLoader}
             src={url}
             alt="Picture of the author"
-            width={500}
-            height={500}
+            width={16}
+            height={16}
         />
     )
 }

@@ -139,57 +139,6 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                                                     }
                                                 </>
                                             }
-                                            {/*{
-                                                accountId === owner_id && <>
-                                                    <div>
-                                                        <h4>Add Sale Conditions</h4>
-                                                        <Grid container columns={{ xs: 12 }} spacing={2}>
-                                                            <Grid item xs={4}>
-                                                                <TextField  variant={"standard"} type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-                                                            </Grid>
-                                                            <Grid item xs={4}>
-                                                                {
-                                                                    getTokenOptions(ft, setFT)
-                                                                }
-                                                            </Grid>
-                                                            <Grid item xs={4}>
-                                                                <Button onClick={() => {
-                                                                    if (!price.length) {
-                                                                        return alert('Enter a price');
-                                                                    }
-                                                                    const newSaleConditions = {
-                                                                        ...saleConditions,
-                                                                        [ft]: parseNearAmount(price)
-                                                                    }
-                                                                    setSaleConditions(newSaleConditions);
-                                                                    setPrice('');
-                                                                    setFT('near');
-                                                                    handleSaleUpdate(account, token_id, newSaleConditions);
-                                                                }}>Add</Button>
-                                                            </Grid>
-                                                        </Grid>
-
-
-
-                                                    </div>
-                                                    <div>
-                                                        <i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
-                                                    </div>
-                                                </>
-                                            }*/}
-                                            {/*{
-                                                        Object.keys(bids).length > 0 && <>
-                                                            <h4>Offers</h4>
-                                                            {
-                                                                Object.entries(bids).map(([ft_token_id, { owner_id, price }]) => <div className="offers" key={ft_token_id}>
-                                                                    <div>
-                                                                        {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-                                                                    </div>
-                                                                    <Button onClick={() => handleAcceptOffer(token_id, ft_token_id)}>Accept</Button>
-                                                                </div>)
-                                                            }
-                                                        </>
-                                                    }*/}
                                         </>
                                         :
                                         <div className="center">
@@ -199,6 +148,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                             </CardContent>
                             <CardActions>
                                 <NextLink href={"/token/[id]"} as={`/token/${token_id}`} >Details</NextLink>
+                                <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
                             </CardActions>
                         </Card>
                     </Grid>
