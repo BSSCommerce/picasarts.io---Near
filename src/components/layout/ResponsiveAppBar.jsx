@@ -19,7 +19,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 import { appStore } from '../../state/app';
 import {Wallet} from "../nft/Wallet";
 import NextLink from 'next/link';
-import {useRouter} from "next/router";
+import logoWhite from "src/public/static/logo_white.svg";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -114,14 +114,7 @@ const ResponsiveAppBar = () => {
                 <Toolbar disableGutters>
 
                         <NextLink href={"/"} as={`/`}>
-                            <Typography
-                                variant="h6"
-                                noWrap
-                                component="div"
-                                sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-                            >
-                                LOGO
-                            </Typography>
+                            <img src={logoWhite.src} width={100}/>
                         </NextLink>
 
 

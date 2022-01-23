@@ -7,7 +7,8 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCache';
 import ResponsiveAppBar from "../components/layout/ResponsiveAppBar";
-import "../public/static/css/style.css"
+import "../public/static/css/style.css";
+import favicon from "../public/static/favicon.ico";
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 import { AppProvider} from '../state/app';
@@ -20,6 +21,9 @@ export default function MyApp(props) {
 
                 <Head>
                     <meta name="viewport" content="initial-scale=1, width=device-width" />
+                    <link rel="shortcut icon" href={favicon.src} />
+                    <meta name={"title"} title={"NFT Marketplace"}/>
+                    <title>NFT Marketplace</title>
                 </Head>
                 <ThemeProvider theme={theme}>
                     {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

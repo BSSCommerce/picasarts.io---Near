@@ -5,19 +5,24 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { appStore, onAppMount} from '../state/app';
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import { Sales } from "../components/nft/Sales";
+import Router from "next/router";
 
 export default function Index() {
-    const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const [isFirstLoading, setIsFirstLoading] = useState(true);
     const { dispatch, state, update } = useContext(appStore);
     const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
     const onMount = () => {
         dispatch(onAppMount());
     };
     useEffect( () => {
-        onMount()
-    }, []);
+        if (isFirstLoading) {
+            setIsFirstLoading(false);
+            onMount()
+        }
+
+    }, [isFirstLoading]);
     return (
         <>
             {/* Hero unit */}
@@ -47,8 +52,8 @@ export default function Index() {
                         spacing={2}
                         justifyContent="center"
                     >
-                        <Button variant="contained">Explore</Button>
-                        <Button variant="outlined">Create</Button>
+                        <Button variant="contained" onClick={() => Router.push("/")}>Explore</Button>
+                        <Button variant="outlined"  onClick={() => Router.push("/create")}>Create</Button>
                     </Stack>
                 </Container>
             </Box>

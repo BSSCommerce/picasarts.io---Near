@@ -3,14 +3,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { appStore, onAppMount } from '../state/app';
 import { Minting } from 'src/components/nft/Minting';
 import Box from "@mui/material/Box";
+import NotLoggedIn from "../components/common/NotLoggedIn";
 
 
 const Create = () => {
     const { state, dispatch, update } = useContext(appStore);
 
-    const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
-
-    const [profile, setProfile] = useState(false);
+    const { near, wallet, account, loading } = state;
 
     const onMount = () => {
         dispatch(onAppMount());
@@ -20,12 +19,9 @@ const Create = () => {
 
     const signedIn = ((wallet && wallet.signedIn));
 
-    if (profile && !signedIn) {
-        setProfile(false);
-    }
 
     return (
-        <Box
+       <Box
             sx={{
                 bgcolor: 'background.paper',
                 pt: 8,
@@ -36,6 +32,9 @@ const Create = () => {
             {
                 signedIn && <Minting {...{ near, update, wallet, account }} />
 
+            }
+            {
+                !signedIn && <NotLoggedIn wallet={wallet} />
             }
 
         </Box>

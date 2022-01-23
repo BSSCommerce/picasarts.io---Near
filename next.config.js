@@ -1,7 +1,6 @@
 module.exports = {
   reactStrictMode: true,
-  images: {
-    domains: ["*"],
-    formats: ['image/avif', 'image/webp'],
-  },
+  env: {
+    mongodburl: "mongodb+srv://admin:Ntt141187@cluster0.eboyt.mongodb.net/nft-market",
+  }
 };

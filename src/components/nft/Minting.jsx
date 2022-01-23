@@ -15,7 +15,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Card from "@mui/material/Card";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../common/ImageUpload";
 
 const {
 	KeyPair,

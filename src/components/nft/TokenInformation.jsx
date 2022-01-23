@@ -1,14 +1,8 @@
-import {useRouter} from "next/router";
-import {styled, useTheme} from "@mui/material/styles";
 import React, {useEffect, useState} from "react";
 import {
     Box,
     Container,
-    Card,
-    CardMedia,
-    CardContent,
     Typography,
-    FormControl,
     Button,
     TextField,
     Grid,
@@ -17,23 +11,19 @@ import {
 import {getTokenOptions, handleOffer, parseNearAmount, token2symbol} from "../../state/near";
 import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
 import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
-import { loadItem } from '../../state/views';
+import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import nearLogo from "../../public/static/img/near-logo.png";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
 
-export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
+export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id }) => {
     if (!contractAccount) return null;
     const {nearToUsd} = app;
-    const router = useRouter();
     let accountId = '';
     if (account) accountId = account.accountId;
-    //const { currentToken } = views
     const { tokens, sales, allTokens } = views
-    const [token, setToken ] = useState(false);
-
     /// market
     const [offerPrice, setOfferPrice] = useState('');
     const [offerToken, setOfferToken] = useState('near');
@@ -43,15 +33,14 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     const [ft, setFT] = useState('near');
     const [saleConditions, setSaleConditions] = useState({});
 
-    // useEffect(() => {
-    //     dispatch(loadItem(account, router.query.id));
-    // }, [])
     useEffect(() => {
-        const {id} = router.query;
-        let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
-        let currentToken = market.find(({ token_id }) => id === token_id);
-        setToken(currentToken);
-    }, [token])
+        if (!loading) {
+            dispatch(loadItems(account))
+            dispatch(getMarketStoragePaid(account))
+        }
+    }, [loading]);
+    let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
+    let token = market.find(({ token_id }) => id === token_id);
     return (
         <Box
             sx={{

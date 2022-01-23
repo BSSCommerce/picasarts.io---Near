@@ -23,6 +23,7 @@
     "copy-to-clipboard": "^3.3.1",
     "ipfs-http-client": "^55.0.0",
     "isomorphic-fetch": "^3.0.0",
+    "mongoose": "^6.1.7",
     "near-api-js": "^0.41.0",
     "near-crust-ipfs": "^1.0.4",
     "near-seed-phrase": "^0.1.0",
@@ -30,7 +31,8 @@
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-dropzone": "^11.5.1"
+    "react-dropzone": "^11.5.1",
+    "swr": "^1.1.2"
   },
   "devDependencies": {
     "eslint": "latest",
