@@ -11,6 +11,7 @@ const {
 /// Manual deployment
 
 // 'bss-nft.testnet'
+// source neardev/dev-account.env
 // near create-account $MARKET_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
 // near deploy --accountId=$MARKET_CONTRACT_ID --wasmFile=./contracts/out/market.wasm
 // near create-account $NFT_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
