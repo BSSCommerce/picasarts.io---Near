@@ -11,11 +11,12 @@ const {
 /// Manual deployment
 
 // 'bss-nft.testnet'
-// near create-account nft-market.bss-nft.testnet --masterAccount bss-nft.testnet--initialBalance 30
-// near deploy --accountId=nft-market.bss-nft.testnet --wasmFile=./out/market.wasm
-// near deploy --accountId=bss-nft.testnet --wasmFile=./out/main.wasm
-// near call nft-market.bss-nft.testnet new '{"owner_id": "bss-nft.testnet", "ft_token_ids": []}' --accountId=bss-nft.testnet
-// near call bss-nft.testnet new '{"owner_id":"bss-nft.testnet","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=bss-nft.testnet
+// near create-account $MARKET_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
+// near deploy --accountId=$MARKET_CONTRACT_ID --wasmFile=./contracts/out/market.wasm
+// near create-account $NFT_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
+// near deploy --accountId=$NFT_CONTRACT_ID --wasmFile=./contracts/out/main.wasm
+// near call $MARKET_CONTRACT_ID new '{"owner_id": "$MAIN_ACCOUNT", "ft_token_ids": []}' --accountId=$MARKET_CONTRACT_ID
+// near call $NFT_CONTRACT_ID new '{"owner_id":"$MAIN_ACCOUNT","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=$NFT_CONTRACT_ID
 
 const deployAccount = await createOrInitAccount(process.env.DEPLOY_ACCOUNT_ID, process.env.DEPLOY_ACCOUNT_SECRET);
 const contractBytes = fs.readFileSync('./out/main.wasm');

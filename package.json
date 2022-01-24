@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest".
+    "build-contract": "cd contracts/nft-contract && ./build.sh && cd .. && ls && cd contracts/market-contract && ./build.sh && cd .."
   },
   "dependencies": {
     "@crustio/type-definitions": "^1.2.0",
