@@ -14,10 +14,10 @@ const {
 // source neardev/dev-account.env
 // near create-account $MARKET_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
 // near deploy --accountId=$MARKET_CONTRACT_ID --wasmFile=./contracts/out/market.wasm
-// near create-account $NFT_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 50
+// near create-account $NFT_CONTRACT_ID --masterAccount $MAIN_ACCOUNT --initialBalance 10
 // near deploy --accountId=$NFT_CONTRACT_ID --wasmFile=./contracts/out/main.wasm
-// near call $MARKET_CONTRACT_ID new '{"owner_id": "$MAIN_ACCOUNT", "ft_token_ids": []}' --accountId=$MARKET_CONTRACT_ID
-// near call $NFT_CONTRACT_ID new '{"owner_id":"$MAIN_ACCOUNT","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=$NFT_CONTRACT_ID
+// near call $MARKET_CONTRACT_ID new '{"owner_id": "near-hackathon.testnet", "ft_token_ids": []}' --accountId=near-hackathon.testnet
+// near call $NFT_CONTRACT_ID new '{"owner_id":"near-hackathon.testnet","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=near-hackathon.testnet
 
 const deployAccount = await createOrInitAccount(process.env.DEPLOY_ACCOUNT_ID, process.env.DEPLOY_ACCOUNT_SECRET);
 const contractBytes = fs.readFileSync('./out/main.wasm');

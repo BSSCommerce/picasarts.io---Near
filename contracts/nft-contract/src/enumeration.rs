@@ -44,7 +44,17 @@ impl Contract {
             U128(0)
         }
     }
-
+    // Get NFT tokens by Ids
+    pub fn nft_tokens_batch(
+        &self,
+        token_ids: Vec<String>,
+    ) -> Vec<JsonToken> {
+        let mut tmp = vec![];
+        for i in 0..token_ids.len() {
+            tmp.push(self.nft_token(token_ids[i].clone()).unwrap());
+        }
+        tmp
+    }
     //Query for all the tokens for an owner
     pub fn nft_tokens_for_owner(
         &self,

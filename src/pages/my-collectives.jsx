@@ -5,7 +5,6 @@ import {useContext, useEffect} from "react";
 import { MyNfts } from "src/components/nft/MyNfts";
 
 export default function MyCollectives() {
-    const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const { dispatch, state, update } = useContext(appStore);
     const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
     const onMount = () => {

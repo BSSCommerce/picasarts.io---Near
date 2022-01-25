@@ -1,5 +1,5 @@
-const contractName = 'bss-nft.testnet';
-
+const contractName = 'near-hackathon.testnet';
+const marketContractAccount = 'market1.near-hackathon.testnet';
 module.exports = function getConfig() {
 	let config = {
 		networkId: "testnet",
@@ -7,7 +7,7 @@ module.exports = function getConfig() {
 		// walletUrl: 'http://localhost:1234',
 		walletUrl: "https://wallet.testnet.near.org",
 		helperUrl: "https://helper.testnet.near.org",
-		contractName,
+		contractName
 	};
 
 	if (process.env.REACT_APP_ENV !== undefined) {
@@ -35,7 +35,7 @@ module.exports = function getConfig() {
 				viewMethods: ["get_guest", "get_token_ids", "nft_token", "get_sale"],
 			},
 			marketDeposit: "100000000000000000000000",
-			marketId: "nft-market." + contractName,
+			marketId: marketContractAccount,
 		};
 	}
 

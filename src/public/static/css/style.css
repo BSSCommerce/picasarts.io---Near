@@ -3,3 +3,22 @@
     padding: 5px;
     border: dotted cornflowerblue;
 }
+
+.form-control {
+    margin: 10px 0;
+}
+
+.picasart-avatar > div {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -45px
+}
+.picasart-profile-banner .MuiPaper-root {
+    border-radius: unset;
+    border: 0;
+    box-shadow: none;
+}
+
+.picasart-name-bio {
+    text-align: center;
+}

@@ -4,7 +4,7 @@ import User from "src/models/User";
 const handler = async (req, res) => {
     if (req.method === 'POST') {
         // Check if name, logo or description is provided
-        const { account_id, logo, banner, bio, email, twitter, instagram, website, wallet_address } = req.body;
+        const { account_id, logo, banner, bio, email, twitter, instagram, website, walletAddress } = req.body;
         if (account_id && email) {
             try {
                 // Hash password to store it in DB
@@ -17,7 +17,7 @@ const handler = async (req, res) => {
                     twitter,
                     instagram,
                     website,
-                    wallet_address
+                    wallet_address: walletAddress
                 });
                 // Create new user
                 let createdUser = await user.save();

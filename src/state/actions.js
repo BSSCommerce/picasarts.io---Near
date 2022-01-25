@@ -25,7 +25,8 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
     await account.functionCall(contractId, 'nft_mint', {
         token_id: 'token-' + Date.now(),
         metadata,
-        perpetual_royalties
+        perpetual_royalties,
+        receiver_id: account.accountId
     }, GAS, deposit);
 };
 

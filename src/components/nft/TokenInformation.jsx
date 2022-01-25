@@ -13,7 +13,7 @@ import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
 import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
-import nearLogo from "../../public/static/img/near-logo.png";
+import nearLogo from "src/public/static/img/near-logo.png";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -59,7 +59,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                     <Grid item xs={6}>
 
                             <Typography component="div" variant="h5">
-                                Author
+                                { token.metadata.title }
                             </Typography>
                             <Typography component="p">
                                 {token.owner_id}
@@ -112,7 +112,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                                         setSaleConditions(newSaleConditions);
                                                         setPrice('');
                                                         setFT('near');
-                                                        handleSaleUpdate(account, token_id, newSaleConditions);
+                                                        handleSaleUpdate(account, token.token_id, newSaleConditions);
                                                     }}>Add</Button>
                                             </Grid>
                                         </Grid>

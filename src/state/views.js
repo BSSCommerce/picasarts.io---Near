@@ -34,7 +34,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
             limit: 50
         });
         const sales = await contractAccount.viewFunction(marketId, 'get_sales_by_owner_id', {
-            account_id: account.accountId,
+            account_id: accountId,
             from_index: '0',
             limit: 50
         });

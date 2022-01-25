@@ -8,10 +8,10 @@ export const {
 	GAS,
 	explorerUrl,
 	networkId, nodeUrl, walletUrl, nameSuffix,
-	contractName: contractId,
+	contractName: contractId
 } = getConfig();
 
-export const marketId = 'nft-market.' + contractId;
+export const marketId = "market1." + contractId;
 
 export const {
 	utils: {
