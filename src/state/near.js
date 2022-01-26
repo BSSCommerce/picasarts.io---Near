@@ -2,7 +2,7 @@ import React from 'react';
 import getConfig from '../config';
 import * as nearAPI from 'near-api-js';
 import { getWallet, postSignedJson } from '../utils/near-utils';
-import {Select, MenuItem, FormControl} from "@mui/material";
+import {Select, MenuItem, FormControl, TextField} from "@mui/material";
 
 export const {
 	GAS,
@@ -70,7 +70,6 @@ export const getTokenOptions = (value, setter, accepted = allTokens) => (
 		id="demo-simple-select"
 		value={value}
 		onChange={(e) => setter(e.target.value)}
-		label="Age"
 	>
 		{
 			accepted.map((value) => <MenuItem key={value} value={value}>{token2symbol[value]}</MenuItem>)

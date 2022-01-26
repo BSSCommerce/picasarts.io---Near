@@ -6,6 +6,7 @@ import {
     Avatar
 } from "@mui/material";
 import useSWR from 'swr'
+import React from "react";
 const fetcher = async (url) => {
     const res = await fetch(url)
     const data = await res.json()
@@ -24,27 +25,41 @@ export default function ProfileBanner({account}) {
     return (
         <div className={"picasart-profile-banner"}>
             <Card sx={{ maxWidth: "100%" }}>
-                <CardMedia
-                    component="img"
-                    height="190"
-                    image="https://source.unsplash.com/random"
-                    alt="green iguana"
-                />
+                { data.banner ?
+
+                    <CardMedia
+                        component="img"
+                        height="250"
+                        image={data.banner}
+                        alt="green iguana"
+                    />
+                    : <CardMedia
+                        component="img"
+                        height="250"
+                        image={"https://source.unsplash.com/random"}
+                        alt="green iguana"
+                    />
+                }
                 <CardContent>
                     <div className={"picasart-avatar"}>
-                        <Avatar
-                            alt="Remy Sharp"
-                            src="https://source.unsplash.com/random"
-                            sx={{ width: 56, height: 56 }}
-                        />
+                        {
+                            data.logo ? <Avatar
+                                alt="Remy Sharp"
+                                src={data.logo}
+                                sx={{ width: 56, height: 56 }}
+                            /> : <Avatar
+                                alt="Remy Sharp"
+                                src={"https://source.unsplash.com/random"}
+                                sx={{ width: 56, height: 56 }}
+                            />
+                        }
                     </div>
                     <div className={"picasart-name-bio"}>
                         <Typography gutterBottom variant="h5" component="div">
                             {data.account_id}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Lizards are a widespread group of squamate reptiles, with over 6,000
-                            species, ranging across all continents except Antarctica
+                            {data.bio}
                         </Typography>
                     </div>
 

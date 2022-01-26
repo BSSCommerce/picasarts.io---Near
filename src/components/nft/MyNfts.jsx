@@ -13,7 +13,7 @@ import {
     Grid,
     TextField,
     Stack,
-    Paper
+    Paper, CardHeader
 } from "@mui/material"
 import { styled } from '@mui/material/styles';
 import {formatAccountId} from "../../utils/near-utils";
@@ -76,7 +76,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
     return <>
 
 
-        <Stack direction="row"
+        {/*<Stack direction="row"
                spacing={2}
                justifyContent="center"
                alignItems="center">
@@ -94,7 +94,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                     tab !== 2 && <Button onClick={() => update('app.sort', sort === 4 ? 3 : 4)} style={{ background: sort === 3 || sort === 4 ? '#fed' : ''}}>Price {sort === 3 && '⬆️'}{sort === 4 && '⬇️'}</Button>
                 }
             </Item>
-        </Stack>
+        </Stack>*/}
 
 
 
@@ -109,47 +109,62 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                                 bids = {},
                                 royalty = {}
                             }) =>
-                    <Grid item key={token_id} xs={12} sm={6} md={4}>
-                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <img src={media} onLoad={() => {}} onError={
-                                ({target}) => { target.onerror = null;target.src='https://source.unsplash.com/random' }
+                    <Grid item key={token_id} xs={6} sm={4} md={3}>
+                        <Card className={"nft-card"} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+
+
+                            <CardHeader
+                                key={`${token_id}_card_header`}
+                                title={title}
+                                subheader={accountId !== owner_id ? `Owned by ${formatAccountId(owner_id)}` : `You own this!`}
+                            />
+                            <img  key={`${token_id}_card_main_media`} style={{width: "100%"}} src={media} onLoad={() => {}} onError={
+                                ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
                             } />
-                            <CardContent sx={{ flexGrow: 1 }}>
-                                <h4>{title}</h4>
-                                {
-                                    marketStoragePaid !== '0' ? <>
-                                            <h4>Royalties</h4>
-                                            {
-                                                Object.keys(royalty).length > 0 ?
-                                                    Object.entries(royalty).map(([receiver, amount]) => <div key={receiver}>
-                                                        {receiver} - {amount / 100}%
-                                                    </div>)
-                                                    :
-                                                    <p>This token has no royalties.</p>
-                                            }
-                                            {
-                                                Object.keys(sale_conditions).length > 0 && <>
-                                                    <h4>Price</h4>
-                                                    {
-                                                        Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
-                                                            {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-                                                            <br/>
-                                                            {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
-                                                        </div>)
-                                                    }
-                                                </>
-                                            }
-                                        </>
-                                        :
-                                        <div className="center">
-                                            <button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
-                                        </div>
-                                }
+                            <CardContent key={`${token_id}_card_main_content`}>
+                                <Typography variant="body2" color="text.secondary">
+
+                                    {
+                                        marketStoragePaid !== '0' ? <div className={"nft-card-royalty-price"}>
+                                                {
+                                                    Object.entries(sale_conditions).length > 0 ?  <Typography component="p">
+                                                        Price
+                                                    </Typography> : <p></p>
+                                                }
+
+                                                {
+                                                    Object.entries(sale_conditions).map(([ft_token_id, price]) => <p className="nft-price" key={ft_token_id}>
+                                                        <span>{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</span>
+                                                        <span>|</span>
+                                                        <span>{price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD</span>
+                                                    </p>)
+                                                }
+                                                <Typography component="p">
+                                                    Royalties
+                                                </Typography>
+                                                {
+                                                    Object.keys(royalty).length > 0 ?
+                                                        Object.entries(royalty).map(([receiver, amount]) => <p key={receiver}>
+                                                            {receiver} - {amount / 100}%
+                                                        </p>)
+                                                        :
+                                                        <p>This token has no royalties.</p>
+                                                }
+
+                                            </div>
+                                            :
+                                            <div className="center">
+                                                <button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
+                                            </div>
+                                    }
+                                </Typography>
+                                <div className={"nft-card-actions"}>
+                                    <NextLink href={"/token/[id]"} as={`/token/${token_id}`} >See Details</NextLink>
+                                    <span> | </span>
+                                    <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
+                                </div>
+
                             </CardContent>
-                            <CardActions>
-                                <NextLink href={"/token/[id]"} as={`/token/${token_id}`} >Details</NextLink>
-                                <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
-                            </CardActions>
                         </Card>
                     </Grid>
 

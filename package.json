@@ -16,7 +16,7 @@
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
-    "@mui/icons-material": "latest",
+    "@mui/icons-material": "^5.3.1",
     "@mui/material": "latest",
     "@polkadot/api": "^7.4.1",
     "@polkadot/util": "^8.3.2",

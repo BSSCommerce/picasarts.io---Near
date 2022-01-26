@@ -5,7 +5,6 @@ const handler = async (req, res) => {
     if (req.method === 'GET') {
         // Check if name, logo or description is provided
         const { accountId } = req.query
-        console.log(req.query);
         try {
             let user = await User.findOne({
                 account_id: accountId

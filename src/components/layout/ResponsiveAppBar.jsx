@@ -14,8 +14,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase'
-const pages = ['Explore', 'My Collections', 'Create', "Resource", "Stats"];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Explore', 'My Collectives', 'Create'];
+const settings = ['Dashboard', 'Settings', 'Logout'];
 import { appStore } from '../../state/app';
 import {Wallet} from "../nft/Wallet";
 import NextLink from 'next/link';
@@ -95,7 +95,7 @@ const ResponsiveAppBar = () => {
             if (page == pages[0]) {
                 url = "/";
             } else if (page == pages[1]) {
-                url = "/my-collectives";
+                url = "/account/dashboard";
             } else {
                 url = "/create"
             }
@@ -177,7 +177,7 @@ const ResponsiveAppBar = () => {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             {/*<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>*/}
-                                {!signedIn ? <Wallet {...{ wallet, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account,  }} />}
+                                {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu  }} />}
                             {/*</IconButton>*/}
                         </Tooltip>
                         <Menu
@@ -196,11 +196,15 @@ const ResponsiveAppBar = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem key={"Dashboard"}>
+                                <Typography textAlign={"Left"} ><NextLink href={"/account/dashboard"}>Dashboard</NextLink></Typography>
+                            </MenuItem>
+                            <MenuItem key={"Dashboard"}>
+                                <Typography textAlign={"Left"} ><NextLink href={"/account/settings"}>Settings</NextLink></Typography>
+                            </MenuItem>
+                            <MenuItem key={"Dashboard"} onClick={() => wallet.signOut()}>
+                                <Typography textAlign={"Left"}>Logout</Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
 

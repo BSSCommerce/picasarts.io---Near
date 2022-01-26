@@ -14,6 +14,7 @@ import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import nearLogo from "src/public/static/img/near-logo.png";
+import NextLink from "next/link";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -50,22 +51,24 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
             }}
         >
             { token && <Container maxWidth="lg">
-                <Grid container columns={{ xs: 12 }} spacing={2}>
+                <Grid container className={"token-information"} columns={{ xs: 12 }} spacing={2}>
                     <Grid item xs={6}>
                         <img style={{width: "100%"}} src={token.metadata.media} onLoad={() => {}} onError={
                             ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
                         } />
                     </Grid>
                     <Grid item xs={6}>
-
-                            <Typography component="div" variant="h5">
-                                { token.metadata.title }
+                        <div className={"section header"}>
+                            <Typography component="div" variant="h4">
+                                <strong>{ token.metadata.title }</strong>
                             </Typography>
                             <Typography component="p">
-                                {token.owner_id}
+                                by <strong>{token.owner_id}</strong>
                             </Typography>
+                        </div>
 
-                            <h4>Royalties</h4>
+                        <div className={"section royalties"}>
+                            <p class="section-title">Royalties</p>
                             {
                                 token.royalty && Object.keys(token.royalty).length > 0 ?
                                     Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
@@ -74,100 +77,126 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                     :
                                     <p>This token has no royalties.</p>
                             }
+                        </div>
 
+                        {
+                            token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>
+                                <p class="section-title">Price</p>
+                                <p className="nft-price" >
+                                    <span>{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</span>
+                                    <span>|</span>
+                                    <span>{price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD</span>
+                                </p>
 
+                            </div>) : ""
+                        }
 
-                            {
-                                token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
-                                    <h4>Price</h4>
-                                    <CurrencySymbol url={nearLogo} />{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-                                    <br/>
-                                    {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
-                                </div>) : ""
-                            }
-
-
-                            {
-                                accountId === token.owner_id && <>
-                                    <div>
-                                        <h4>Add Price</h4>
-                                        <Grid container columns={{ xs: 12 }} spacing={2}>
-                                            <Grid item xs={3}>
-                                                    <TextField  variant={"standard"} type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    {
-                                                        getTokenOptions(ft, setFT)
-                                                    }
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <Button onClick={() => {
-                                                        if (!price.length) {
-                                                            return alert('Enter a price');
-                                                        }
-                                                        const newSaleConditions = {
-                                                            ...saleConditions,
-                                                            [ft]: parseNearAmount(price)
-                                                        }
-                                                        setSaleConditions(newSaleConditions);
-                                                        setPrice('');
-                                                        setFT('near');
-                                                        handleSaleUpdate(account, token.token_id, newSaleConditions);
-                                                    }}>Add</Button>
-                                            </Grid>
+                        {
+                            accountId === token.owner_id && <div className={"section add-price"}>
+                                <div>
+                                    <p class="section-title">Add Price</p>
+                                    <Grid container columns={{ xs: 12 }} spacing={2} style={{display: "flex"}}>
+                                        <Grid item xs={3}>
+                                            <TextField  variant={"standard"} type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
                                         </Grid>
-
-
-
-                                    </div>
-                                    <div>
-                                        <i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
-                                    </div>
-                                </>
-                            }
-                            {
-                                accountId.length > 0 && accountId !== token.owner_id && <div>
-                                    <h4>Add Offer</h4>
-                                    <Grid container columns={{ xs: 12 }} spacing={2}>
-                                        <Grid item xs={4}>
-                                            <TextField variant={"standard"} placeholder="Price" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
-                                        </Grid>
-                                        <Grid item xs={4}>
+                                        <Grid item xs={2}>
                                             {
-                                                getTokenOptions(offerToken, setOfferToken, Object.keys(token.sale_conditions))
+                                                getTokenOptions(ft, setFT)
                                             }
                                         </Grid>
-                                        <Grid item xs={4}>
-                                            <Button  onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
+                                        <Grid item xs={2}>
+                                            <Button variant={"contained"} onClick={() => {
+                                                if (!price.length) {
+                                                    return alert('Enter a price');
+                                                }
+                                                const newSaleConditions = {
+                                                    ...saleConditions,
+                                                    [ft]: parseNearAmount(price)
+                                                }
+                                                setSaleConditions(newSaleConditions);
+                                                setPrice('');
+                                                setFT('near');
+                                                handleSaleUpdate(account, token.token_id, newSaleConditions);
+                                            }}>Add</Button>
                                         </Grid>
-
                                     </Grid>
+
+
+
                                 </div>
-                            }
+                                <div>
+                                    <i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
+                                </div>
+                            </div>
+                        }
+                        {
+                            accountId.length > 0 && accountId !== token.owner_id && <div className={"section add-offers"}>
+                                <p class="section-title">Add Offer</p>
+                                <Grid container columns={{ xs: 12 }} spacing={2}>
+                                    <Grid item xs={4}>
+                                        <TextField variant={"standard"} placeholder="Price" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        {
+                                            getTokenOptions(offerToken, setOfferToken, Object.keys(token.sale_conditions))
+                                        }
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Button  onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
+                                    </Grid>
 
-                            {
-                                token.bids && Object.keys(token.bids).length > 0 && <>
-                                    <h4>Offers</h4>
-                                    {
-                                        Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
-                                            <p>
-                                                {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
-                                                <br/>
-                                                {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
-                                            </p>
-                                            {
-                                                accountId === token.owner_id &&
-                                                <Button variant={"contained"} onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</Button>
-                                            }
-                                        </div>) )
-                                    }
-                                </>
-                            }
+                                </Grid>
+                            </div>
+                        }
 
-                            <h4>Description</h4>
+                        {
+                            token.bids && Object.keys(token.bids).length > 0 && <div className={"section bids"}>
+                                <p class="section-title">Offers</p>
+                                {
+                                    Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
+                                        <p>
+                                            {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
+                                            <br/>
+                                            {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
+                                        </p>
+                                        {
+                                            accountId === token.owner_id &&
+                                            <Button variant={"contained"} onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</Button>
+                                        }
+                                    </div>) )
+                                }
+                            </div>
+                        }
+                        <div className={"section description"}>
+                            <p class="section-title">Description</p>
                             <p>
                                 {token.metadata.description}
                             </p>
+                        </div>
+                        <div className={"section token-info"}>
+                            <p class="section-title">Token info</p>
+                            <div className={"token-info-item"}>
+                                <span>
+                                    Smart Contract
+                                </span>
+                                <span>
+                                    {contractAccount.accountId}
+                                </span>
+
+                            </div>
+                            <div className={"token-info-item"}>
+                                <span>
+                                    Image Link
+                                </span>
+                                <span>
+                                    <a href={token.metadata.media} target="_blank">{token.metadata.media.slice(0, 30)}...</a>
+                                    <span> | </span>
+                                    <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${token.metadata.media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
+                                </span>
+
+                            </div>
+                        </div>
+
                     </Grid>
 
 
