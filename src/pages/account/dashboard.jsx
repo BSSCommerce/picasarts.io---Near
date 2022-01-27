@@ -4,7 +4,7 @@ import ProfileBanner from "src/components/account/ProfileBanner";
 import {appStore, onAppMount} from "../../state/app";
 import {MyNfts} from "../../components/nft/MyNfts";
 import Container from "@mui/material/Container";
-
+import NotLoggedIn from "src/components/common/NotLoggedIn";
 export default function Dashboard() {
     const { state, dispatch, update } = useContext(appStore);
 
@@ -22,7 +22,9 @@ export default function Dashboard() {
                 bgcolor: 'background.paper',
             }}
         >
-
+            {
+                !signedIn && <NotLoggedIn wallet={wallet} />
+            }
             { signedIn && <ProfileBanner account={account}/> }
             { signedIn && <Container sx={{ py: 8 }} maxWidth="lg">
                              <MyNfts {...{ app, views, update, loading, contractAccount, account, dispatch }} />

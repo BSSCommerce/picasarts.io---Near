@@ -20,7 +20,7 @@ export default function ProfileBanner({account}) {
     const { data, error } = useSWR(`/api/profile/get/${account.accountId}`,
         fetcher
     )
-    if (error) return <div>{error.message}</div>
+    if (error) return <div></div>
     if (!data) return <div>Loading...</div>
     return (
         <div className={"picasart-profile-banner"}>

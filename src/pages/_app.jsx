@@ -6,7 +6,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCache';
-import ResponsiveAppBar from "../components/layout/ResponsiveAppBar";
+import ResponsiveAppBar from "src/components/layout/ResponsiveAppBar";
+import Footer from "src/components/layout/Footer";
 import "../public/static/css/style.css";
 import favicon from "../public/static/favicon.ico";
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -32,6 +33,7 @@ export default function MyApp(props) {
                         <AppProvider>
                             <ResponsiveAppBar/>
                             <Component {...pageProps} />
+                            <Footer />
                         </AppProvider>
                     </main>
                 </ThemeProvider>

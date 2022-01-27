@@ -1,4 +1,4 @@
-import React, { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot, crustTypes } from '@crustio/type-definitions';
 import { useState, useEffect, useCallback } from "react";
 import Router from "next/router";
@@ -12,10 +12,10 @@ const api = new ApiPromise({
     provider: new WsProvider(crustChainEndpoint),
     typesBundle: typesBundleForPolkadot,
 });
-export default function CrustScanCid() {
+export default function CrustScanCid({cid}) {
     const [isFirstLoading, setIsFirstLoading] = useState(true)
     const [fileData, setFileData] = useState(null);
-    const [currentCid, setCurrentCid] = useState("")
+    const [currentCid, setCurrentCid] = useState(cid)
     async function fetchData(cid) {
         try {
             await api.isReadyOrError;
@@ -30,11 +30,10 @@ export default function CrustScanCid() {
     useEffect(() => {
         if (isFirstLoading) {
             setIsFirstLoading(false)
-            let cid = Router.query.cid;
             setCurrentCid(cid);
             fetchData(cid);
         }
-    }, [isFirstLoading])
+    }, [isFirstLoading, currentCid])
 
     const handleSearch = useCallback(() => {
         fetchData(currentCid);
@@ -62,4 +61,11 @@ export default function CrustScanCid() {
         </Box>
 
     )
+}
+
+CrustScanCid.getInitialProps = async (ctx) => {
+    const {cid} = ctx.query;
+    return {
+        cid: cid
+    }
 }

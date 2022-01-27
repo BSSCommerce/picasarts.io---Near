@@ -154,15 +154,16 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 <p class="section-title">Offers</p>
                                 {
                                     Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
-                                        <p>
-                                            {price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
-                                            <br/>
-                                            {price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD
+                                        <p className="nft-price" >
+                                            <span>{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</span>
+                                            <span> | </span>
+                                            <span>{price === '0' ? "" : (parseFloat(formatNearAmount(price, 4)) * nearToUsd).toFixed(3) } USD</span>
+                                            <span> | </span>
+                                            <span>by <strong>{bid_owner_id}</strong></span>
+                                            <span> | </span>
+                                            <span>{accountId === token.owner_id && <Button variant={"contained"} onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</Button>}</span>
                                         </p>
-                                        {
-                                            accountId === token.owner_id &&
-                                            <Button variant={"contained"} onClick={() => handleAcceptOffer(account, token.token_id, ft_token_id)}>Accept</Button>
-                                        }
+
                                     </div>) )
                                 }
                             </div>
