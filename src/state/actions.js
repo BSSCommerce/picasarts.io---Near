@@ -1,18 +1,34 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
 import { uploadToCrust } from "near-crust-ipfs";
-export const handleMint = async (account, royalties, media, validMedia, title, description) => {
-    if (!media) {
-        alert('Please enter a valid Image Link. You should see a preview below!');
-        return;
+export const handleMint = async (account, royalties, media, validMedia, title, description, setValidateTitleMessage, setIsRequireMediaMessage, setValidateRoyaltiesMessage, setIsLoading) => {
+    setIsLoading(true);
+    if (!title) {
+        setValidateTitleMessage("Please enter item title")
+        setIsLoading(false);
+        return false;
+    } else {
+        setValidateTitleMessage("");
     }
+    if (!media) {
+        setIsRequireMediaMessage('Please enter a valid Image Link');
+        setIsLoading(false);
+        return false;
+    } else {
+        setIsRequireMediaMessage("");
+    }
+
     const {cid, path} = await uploadToCrust( media );
     // shape royalties data for minting and check max is < 20%
     let perpetual_royalties = Object.entries(royalties).map(([receiver, royalty]) => ({
         [receiver]: royalty * 100
     })).reduce((acc, cur) => Object.assign(acc, cur), {});
     if (Object.values(perpetual_royalties).reduce((a, c) => a + c, 0) > 2000) {
-        return alert('Cannot add more than 20% in perpetual NFT royalties when minting');
+        setValidateRoyaltiesMessage('Cannot add more than 20% in perpetual NFT royalties when minting');
+        setIsLoading(false);
+        return false;
+    } else {
+        setValidateRoyaltiesMessage("");
     }
     
     const metadata = {
@@ -28,6 +44,7 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
         perpetual_royalties,
         receiver_id: account.accountId
     }, GAS, deposit);
+    setIsLoading(false);
 };
 
 export const handleAcceptOffer = async (account, token_id, ft_token_id) => {

@@ -8,8 +8,9 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,7 +21,9 @@ import { appStore } from '../../state/app';
 import {Wallet} from "../nft/Wallet";
 import NextLink from 'next/link';
 import logoWhite from "src/public/static/logo_white.svg";
-
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -109,7 +112,7 @@ const ResponsiveAppBar = () => {
             </MenuItem>
         })
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
 
@@ -181,7 +184,7 @@ const ResponsiveAppBar = () => {
                             {/*</IconButton>*/}
                         </Tooltip>
                         <Menu
-                            sx={{ mt: '45px' }}
+                            sx={{ mt: '50px'}}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -197,12 +200,22 @@ const ResponsiveAppBar = () => {
                             onClose={handleCloseUserMenu}
                         >
                             <MenuItem key={"Dashboard"}>
-                                <Typography textAlign={"Left"} ><NextLink href={"/account/dashboard"}>Dashboard</NextLink></Typography>
+                                <ListItemIcon>
+                                    <DashboardIcon fontSize="small" />
+                                </ListItemIcon>
+                                <NextLink href={"/account/dashboard"}><Typography textAlign={"Left"} >Dashboard</Typography></NextLink>
                             </MenuItem>
                             <MenuItem key={"Dashboard"}>
-                                <Typography textAlign={"Left"} ><NextLink href={"/account/settings"}>Settings</NextLink></Typography>
+                                <ListItemIcon>
+                                    <SettingsIcon fontSize="small" />
+                                </ListItemIcon>
+                                <NextLink href={"/account/settings"}><Typography textAlign={"Left"} >Settings</Typography></NextLink>
                             </MenuItem>
+                            <Divider />
                             <MenuItem key={"Dashboard"} onClick={() => wallet.signOut()}>
+                                <ListItemIcon>
+                                    <LogoutIcon fontSize="small" />
+                                </ListItemIcon>
                                 <Typography textAlign={"Left"}>Logout</Typography>
                             </MenuItem>
                         </Menu>

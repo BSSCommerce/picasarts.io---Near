@@ -10,16 +10,17 @@ import {
 	Button,
 	TextField,
 	Container,
-	Grid, CircularProgress, CardHeader,
+	Grid,
+	CircularProgress,
+	CardHeader,
+	Alert
 } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import CardActions from "@mui/material/CardActions";
 import Card from "@mui/material/Card";
 import ImageUpload from "../common/ImageUpload";
-import {token2symbol} from "../../state/near";
 import NextLink from "next/link";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 const {
 	KeyPair,
 } = nearAPI;
@@ -31,6 +32,10 @@ export const Minting = ({ near, update, account }) => {
 	const [description, setDescription] = useState("");
 	const [media, setMedia] = useState('');
 	const [validMedia, setValidMedia] = useState(true);
+	const [validateTitleMessage, setValidateTitleMessage] = useState("");
+	const [isRequireMediaMessage, setIsRequireMediaMessage] = useState("");
+	const [validateRoyaltiesMessage, setValidateRoyaltiesMessage] = useState("");
+
 	const [royalties, setRoyalties] = useState({});
 	const [royalty, setRoyalty] = useState([]);
 	const [receiver, setReceiver] = useState([]);
@@ -47,6 +52,7 @@ export const Minting = ({ near, update, account }) => {
 						<div className={"form-control"}>
 							<TextField required variant={"outlined"} fullWidth label={"Title"} value={title} onChange={(e) => setTitle(e.target.value)} />
 						</div>
+						{ validateTitleMessage && <Alert severity={"error"}>{validateTitleMessage}</Alert> }
 						<div className={"form-control"}>
 							<TextField variant={"outlined"} fullWidth label={"Description"} value={description} onChange={(e) => setDescription(e.target.value)} multiline={true} />
 						</div>
@@ -58,20 +64,21 @@ export const Minting = ({ near, update, account }) => {
 							</strong>
 							<ImageUpload setMedia={setMedia}/>
 						</div>
-						{ !validMedia && <p>Image link is invalid.</p> }
-
+						{ !validMedia && <Alert severity="error">Image link is invalid</Alert> }
+						{ isRequireMediaMessage && <Alert severity="error">{isRequireMediaMessage}</Alert> }
 						<h4>Royalties</h4>
 						{
 							Object.keys(royalties).length > 0 ?
-								Object.entries(royalties).map(([receiver, royalty]) => <div key={receiver}>
-									{receiver} - {royalty} % <button onClick={() => {
+								Object.entries(royalties).map(([receiver, royalty]) => <div style={{display: "flex", paddingBottom: "10px"}} key={receiver}>
+									<Typography variant={"body1"}>{receiver} - {royalty} % </Typography><DeleteIcon onClick={() => {
 									delete royalties[receiver];
 									setRoyalties(Object.assign({}, royalties));
-								}}>❌</button>
+								}} />
 								</div>)
 								:
-								<p>No royalties added yet.</p>
+								<Alert severity={"warning"}>No royalties added yet.</Alert>
 						}
+						{ validateRoyaltiesMessage && <Alert severity="error">{validateRoyaltiesMessage}</Alert>}
 						<div className={"form-control"} style={{display: "flex"}}>
 							<TextField variant={"outlined"} label="Account ID" value={receiver} onChange={(e) => setReceiver(e.target.value)} />
 							<TextField variant={"outlined"} type="number" label="Percentage" value={royalty} onChange={(e) => setRoyalty(e.target.value)} />
@@ -83,7 +90,9 @@ export const Minting = ({ near, update, account }) => {
 								}));
 							}}>Add</Button>
 						</div>
-						<Button disabled={isLoading} variant={"contained"} onClick={() => { setIsLoading(true); handleMint(account, royalties, media, validMedia, title, description)}}>
+						<Button disabled={isLoading} variant={"contained"} onClick={() => {
+							handleMint(account, royalties, media, validMedia, title, description, setValidateTitleMessage, setIsRequireMediaMessage, setValidateRoyaltiesMessage, setIsLoading);
+						}}>
 							{isLoading && <CircularProgress size={14} />}
 							{!isLoading && 'Create'}
 						</Button>

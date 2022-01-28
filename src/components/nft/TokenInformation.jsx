@@ -136,13 +136,13 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                     <Grid item xs={4}>
                                         <TextField variant={"standard"} placeholder="Price" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={2}>
                                         {
                                             getTokenOptions(offerToken, setOfferToken, Object.keys(token.sale_conditions))
                                         }
                                     </Grid>
-                                    <Grid item xs={4}>
-                                        <Button  onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
+                                    <Grid item xs={2}>
+                                        <Button variant={"contained"} onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
                                     </Grid>
 
                                 </Grid>

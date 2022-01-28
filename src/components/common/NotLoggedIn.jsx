@@ -8,7 +8,7 @@ import React from "react";
 
 export default function NotLoggedIn({wallet}) {
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Typography
                 component="h1"
                 variant="h2"
