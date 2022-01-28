@@ -7,9 +7,9 @@ import Box from "@mui/material/Box";
 import {Button, Container, Grid, TextField} from "@mui/material";
 
 // Create global chain instance
-const crustChainEndpoint = 'wss://rpc.crust.network';
-const api = new ApiPromise({
-    provider: new WsProvider(crustChainEndpoint),
+const crustRpcChainEndpoint = 'wss://rpc.crust.network';
+const crustApi = new ApiPromise({
+    provider: new WsProvider(crustRpcChainEndpoint),
     typesBundle: typesBundleForPolkadot,
 });
 export default function CrustScanCid({cid}) {
@@ -18,11 +18,11 @@ export default function CrustScanCid({cid}) {
     const [currentCid, setCurrentCid] = useState(cid)
     async function fetchData(cid) {
         try {
-            await api.isReadyOrError;
-            let fileDataReq = await api.query.market.files(cid);
+            await crustApi.isReadyOrError;
+            let fileDataReq = await crustApi.query.market.files(cid);
             let fileDataRes = JSON.parse(fileDataReq);
             setFileData(fileDataRes);
-            console.log("fileDataReq", fileDataRes);
+            console.log("fileDataRes", fileDataRes);
         } catch (e) {
             console.log("Could not fetch file data", e);
         }
