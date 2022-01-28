@@ -1,0 +1,75 @@
+.dropzone {
+    background-color: whitesmoke;
+    padding: 5px;
+    border: dotted cornflowerblue;
+}
+
+.form-control {
+    margin: 10px 0;
+}
+.form-control .MuiFormControl-root {
+    margin-right: 5px;
+}
+.picasart-avatar > div {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -45px
+}
+.picasart-profile-banner .MuiPaper-root {
+    border-radius: unset;
+    border: 0;
+    box-shadow: none;
+}
+
+.picasart-name-bio {
+    text-align: center;
+}
+
+.nft-card {
+    text-align: center;
+}
+.nft-card .MuiCardHeader-title {
+    font-size: 1rem;
+}
+.nft-card .MuiCardHeader-subheader {
+    font-size: 0.75rem;
+}
+
+.nft-price span {
+    margin: 2px;
+    font-size: 0.8rem;
+}
+
+.nft-card-actions {
+    font-size: 0.8rem;
+}
+.token-information .section:not(.header) {
+    padding: 5px 10px;
+    box-sizing: border-box;
+    background: whitesmoke;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+.token-information .section p {
+    margin: 0;
+}
+.token-information .section .section-title {
+    font-weight: bold;
+}
+.token-information .section .token-info-item {
+    display: flex;
+    justify-content: space-between;
+}
+.minting-form {
+    padding: 0 16px 20px;
+    border: whitesmoke solid 1px;
+}
+
+.picasarts-next-link {
+    text-decoration: none;
+}
+
+.picasarts-next-link.main-menu {
+    color: white;
+    font-weight: bold;
+}
