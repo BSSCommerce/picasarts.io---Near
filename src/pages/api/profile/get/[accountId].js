@@ -4,7 +4,7 @@ import User from "src/models/User";
 const handler = async (req, res) => {
     if (req.method === 'GET') {
         // Check if name, logo or description is provided
-        const { accountId } = req.query
+        const { accountId } = req.query;
         try {
             let user = await User.findOne({
                 account_id: accountId
