@@ -8,7 +8,7 @@ import { appStore, onAppMount} from '../state/app';
 import {useContext, useEffect, useState} from "react";
 import { Sales } from "../components/nft/Sales";
 import Router from "next/router";
-
+import backgroundImage from "../public/static/img/bg_4.png";
 export default function Index() {
     const [isFirstLoading, setIsFirstLoading] = useState(true);
     const { dispatch, state, update } = useContext(appStore);
@@ -31,6 +31,7 @@ export default function Index() {
                     bgcolor: 'background.paper',
                     pt: 8,
                     pb: 6,
+                    backgroundImage:`url(${backgroundImage.src})`
                 }}
             >
                 <Container maxWidth="md">
@@ -38,12 +39,12 @@ export default function Index() {
                         component="h1"
                         variant="h2"
                         align="center"
-                        color="text.primary"
+                        color="white"
                         gutterBottom
                     >
                         Discover, collect, and sell extraordinary NFTs
                     </Typography>
-                    <Typography variant="h5" align="center" color="text.secondary" paragraph>
+                    <Typography variant="h5" align="center" color="white" paragraph>
                         Picasarts is the world's first and largest NFT marketplace
                     </Typography>
                     <Stack
@@ -52,12 +53,12 @@ export default function Index() {
                         spacing={2}
                         justifyContent="center"
                     >
-                        <Button variant="contained" onClick={() => Router.push("/")}>Explore</Button>
-                        <Button variant="outlined"  onClick={() => Router.push("/create")}>Create</Button>
+                        <Button variant={"contained"} onClick={() => Router.push("/")}>Explore</Button>
+                        <Button variant="contained"  onClick={() => Router.push("/create")}>Create</Button>
                     </Stack>
                 </Container>
             </Box>
-            <Container sx={{ py: 8 }} maxWidth="lg">
+            <Container sx={{ py: 8 }} maxWidth="lg" style={{paddingTop: "0", marginTop:"-40px"}}>
                 <Sales {...{ app, views, update, loading, contractAccount, account, dispatch }} />
             </Container>
         </>
