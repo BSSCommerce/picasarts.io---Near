@@ -112,16 +112,6 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                     <Grid item key={token_id} xs={6} sm={4} md={3}>
                         <Card className={"nft-card"} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
 
-
-                            {/*<CardHeader*/}
-                            {/*    key={`${token_id}_card_header`}*/}
-                            {/*    title={title}*/}
-                            {/*    subheader={accountId !== owner_id ? `Owned by ${formatAccountId(owner_id)}` : `You own this!`}*/}
-                            {/*/>*/}
-                            {/*<img  key={`${token_id}_card_main_media`} style={{width: "100%"}} src={media} onLoad={() => {}} onError={*/}
-                            {/*    ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }*/}
-                            {/*} />*/}
-
                             <div className={"nft-image"}>
                                 <img  key={`${token_id}_card_main_media`}  src={media} onLoad={() => {}} onError={
                                     ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
@@ -180,9 +170,6 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                             </CardContent>
                         </Card>
                     </Grid>
-
-
-
                 )
             }
         </Grid>

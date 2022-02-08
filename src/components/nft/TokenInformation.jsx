@@ -15,6 +15,7 @@ import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import nearLogo from "src/public/static/img/near-logo.png";
 import NextLink from "next/link";
+import RelatedNFT from "./RelatedNFT";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -43,7 +44,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     }, [loading]);
     let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
     let token = market.find(({ token_id }) => id === token_id);
-
+    let relatedTokens = market.filter((t) => t.owner_id == token.owner_id);
     const handleAddOffer = useCallback(async (account, token_id, offerToken, offerPrice) => {
         let result = await handleOffer(account, token_id, offerToken, offerPrice)
         if (result) {
@@ -65,6 +66,12 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         <img style={{width: "100%"}} src={token.metadata.media} onLoad={() => {}} onError={
                             ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
                         } />
+                        <div className={"section description"}>
+                            <p className="section-title">Description</p>
+                            <p>
+                                {token.metadata.description}
+                            </p>
+                        </div>
                     </Grid>
                     <Grid item xs={6}>
                         <div className={"section header"}>
@@ -72,7 +79,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 <strong>{ token.metadata.title }</strong>
                             </Typography>
                             <Typography component="p">
-                                by <strong>{token.owner_id}</strong>
+                                Owned by <strong> <span className={"nft-author-name"}>{token.owner_id}</span></strong>
                             </Typography>
                         </div>
 
@@ -179,12 +186,6 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 }
                             </div>
                         }
-                        <div className={"section description"}>
-                            <p className="section-title">Description</p>
-                            <p>
-                                {token.metadata.description}
-                            </p>
-                        </div>
                         <div className={"section token-info"}>
                             <p className="section-title">Token info</p>
                             <div className={"token-info-item"}>
@@ -213,7 +214,11 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
 
                 </Grid>
+                <h2>You might like</h2>
+                <RelatedNFT relatedTokens={relatedTokens} nearToUsd={nearToUsd} />
             </Container> }
+
+
         </Box>
 
     );
