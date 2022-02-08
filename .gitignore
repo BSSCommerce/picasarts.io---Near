@@ -16,3 +16,5 @@ yarn-error.log*
 
 # Next.js
 /.next
+/contracts/market-contract/target
+/contracts/nft-contract/target
