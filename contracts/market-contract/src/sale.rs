@@ -83,16 +83,17 @@ impl Contract {
 
         let deposit = env::attached_deposit();
         assert!(deposit > 0, "Attached deposit must be greater than 0");
-
-        if !sale.is_auction && deposit == price {
-            self.process_purchase(
-                contract_id,
-                token_id,
-                ft_token_id,
-                U128(deposit),
-                buyer_id,
-            );
-        } else {
+        // This is true logic: if offer = current price then process purchase,
+        // But should check and add warning at frontend.
+        // if !sale.is_auction && deposit == price {
+        //     self.process_purchase(
+        //         contract_id,
+        //         token_id,
+        //         ft_token_id,
+        //         U128(deposit),
+        //         buyer_id,
+        //     );
+        // } else {
             if sale.is_auction && price > 0 {
                 assert!(deposit >= price, "Attached deposit must be greater than reserve price");
             }
@@ -103,7 +104,7 @@ impl Contract {
                 buyer_id,
                 &mut sale,
             );
-        }
+        // }
     }
 
     #[private]

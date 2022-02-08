@@ -6,18 +6,19 @@ import DataList from "src/components/cruscan/DataList";
 import Box from "@mui/material/Box";
 import {Button, Container, Grid, TextField} from "@mui/material";
 
-// Create global chain instance
-const crustRpcChainEndpoint = 'wss://rpc.crust.network';
-const crustApi = new ApiPromise({
-    provider: new WsProvider(crustRpcChainEndpoint),
-    typesBundle: typesBundleForPolkadot,
-});
-export default function CrustScanCid({cid}) {
+
+export default function CrustScanCid({cid, crustApi}) {
+    // Create global chain instance
+    const crustRpcChainEndpoint = 'wss://rpc.crust.network';
     const [isFirstLoading, setIsFirstLoading] = useState(true)
     const [fileData, setFileData] = useState(null);
     const [currentCid, setCurrentCid] = useState(cid)
     async function fetchData(cid) {
         try {
+            const crustApi = new ApiPromise({
+                provider: new WsProvider(crustRpcChainEndpoint),
+                typesBundle: typesBundleForPolkadot,
+            });
             await crustApi.isReadyOrError;
             let fileDataReq = await crustApi.query.market.files(cid);
             let fileDataRes = JSON.parse(fileDataReq);
@@ -37,7 +38,7 @@ export default function CrustScanCid({cid}) {
 
     const handleSearch = useCallback(() => {
         fetchData(currentCid);
-    }, [])
+    }, [currentCid])
 
     return (
         <Box
@@ -66,6 +67,6 @@ export default function CrustScanCid({cid}) {
 CrustScanCid.getInitialProps = async (ctx) => {
     const {cid} = ctx.query;
     return {
-        cid: cid
+        cid: cid,
     }
 }

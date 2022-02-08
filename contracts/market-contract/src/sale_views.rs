@@ -112,7 +112,10 @@ impl Contract {
         tmp
     }
 
+    //get a sale information for a given unique sale ID (contract + DELIMITER + token ID)
     pub fn get_sale(&self, nft_contract_token: ContractAndTokenId) -> Option<Sale> {
+        //try and get the sale object for the given unique sale ID. Will return an option since
+        //we're not guaranteed that the unique sale ID passed in will be valid.
         self.sales.get(&nft_contract_token)
     }
     

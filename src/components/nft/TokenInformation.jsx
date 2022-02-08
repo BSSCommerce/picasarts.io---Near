@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
     Box,
     Container,
@@ -6,7 +6,7 @@ import {
     Button,
     TextField,
     Grid,
-    Paper
+    Paper, Alert
 } from "@mui/material";
 import {getTokenOptions, handleOffer, parseNearAmount, token2symbol} from "../../state/near";
 import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
@@ -20,6 +20,7 @@ const {
 } = nearAPI;
 
 export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id }) => {
+
     if (!contractAccount) return null;
     const {nearToUsd} = app;
     let accountId = '';
@@ -28,7 +29,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     /// market
     const [offerPrice, setOfferPrice] = useState('');
     const [offerToken, setOfferToken] = useState('near');
-
+    const [addOfferErrorMessage, setAddOfferErrorMessage] = useState('');
     /// updating user tokens
     const [price, setPrice] = useState('');
     const [ft, setFT] = useState('near');
@@ -42,6 +43,14 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     }, [loading]);
     let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
     let token = market.find(({ token_id }) => id === token_id);
+
+    const handleAddOffer = useCallback(async (account, token_id, offerToken, offerPrice) => {
+        let result = await handleOffer(account, token_id, offerToken, offerPrice)
+        if (result) {
+            setAddOfferErrorMessage(result);
+        }
+    }, [addOfferErrorMessage])
+
     return (
         <Box
             sx={{
@@ -68,7 +77,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         </div>
 
                         <div className={"section royalties"}>
-                            <p class="section-title">Royalties</p>
+                            <p className="section-title">Royalties</p>
                             {
                                 token.royalty && Object.keys(token.royalty).length > 0 ?
                                     Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
@@ -81,7 +90,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
                         {
                             token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>
-                                <p class="section-title">Price</p>
+                                <p className="section-title">Price</p>
                                 <p className="nft-price" >
                                     <span>{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</span>
                                     <span>|</span>
@@ -94,7 +103,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         {
                             accountId === token.owner_id && <div className={"section add-price"}>
                                 <div>
-                                    <p class="section-title">Add Price</p>
+                                    <p className="section-title">Add Price</p>
                                     <Grid container columns={{ xs: 12 }} spacing={2} style={{display: "flex"}}>
                                         <Grid item xs={3}>
                                             <TextField  variant={"standard"} type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
@@ -131,7 +140,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         }
                         {
                             accountId.length > 0 && accountId !== token.owner_id && <div className={"section add-offers"}>
-                                <p class="section-title">Add Offer</p>
+                                <p className="section-title">Add Offer</p>
                                 <Grid container columns={{ xs: 12 }} spacing={2}>
                                     <Grid item xs={4}>
                                         <TextField variant={"standard"} placeholder="Price" type="number" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
@@ -142,16 +151,18 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                         }
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <Button variant={"contained"} onClick={() => handleOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
+                                        <Button variant={"contained"} onClick={() => handleAddOffer(account, token.token_id, offerToken, offerPrice)}>Offer</Button>
                                     </Grid>
 
                                 </Grid>
+
+                                { addOfferErrorMessage && <> <br/><Alert severity={"error"}>{addOfferErrorMessage}</Alert></> }
                             </div>
                         }
 
                         {
                             token.bids && Object.keys(token.bids).length > 0 && <div className={"section bids"}>
-                                <p class="section-title">Offers</p>
+                                <p className="section-title">Offers</p>
                                 {
                                     Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
                                         <p className="nft-price" >
@@ -169,13 +180,13 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                             </div>
                         }
                         <div className={"section description"}>
-                            <p class="section-title">Description</p>
+                            <p className="section-title">Description</p>
                             <p>
                                 {token.metadata.description}
                             </p>
                         </div>
                         <div className={"section token-info"}>
-                            <p class="section-title">Token info</p>
+                            <p className="section-title">Token info</p>
                             <div className={"token-info-item"}>
                                 <span>
                                     Smart Contract

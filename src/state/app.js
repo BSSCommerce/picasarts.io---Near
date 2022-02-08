@@ -18,7 +18,8 @@ const initialState = {
 		tokens: [],
 		sales: [],
 		allTokens: [],
-		currentToken: null
+		currentToken: null,
+		offerErrorMessage: ""
 	}
 };
 let snackTimeout;
