@@ -45,7 +45,7 @@ export default function Index() {
                         Discover, collect, and sell extraordinary NFTs
                     </Typography>
                     <Typography variant="h5" align="center" color="white" paragraph>
-                        Picasarts is the world's first and largest NFT marketplace
+                        NFT marketplace for everyone
                     </Typography>
                     <Stack
                         sx={{ pt: 4 }}

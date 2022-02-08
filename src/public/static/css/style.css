@@ -73,3 +73,19 @@
     color: white;
     font-weight: bold;
 }
+.nft-author-name {
+    color: #0072CE;
+}
+
+.nft-title {
+    color: black;
+    font-weight: bold;
+}
+
+.nft-image {
+    max-height: 150px;
+    overflow: hidden;
+}
+.nft-image img {
+    width: 100%;
+}

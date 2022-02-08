@@ -43,14 +43,18 @@ export const Sales = ({ app, views, loading, contractAccount, account, dispatch 
                             className={"nft-card"}
                             sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                         >
+                            <div className={"nft-image"}>
+                                <img  key={`${token_id}_card_main_media`}  src={media} onLoad={() => {}} onError={
+                                    ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
+                                } />
+                            </div>
+
                             <CardHeader
+                                sx={{ paddingBottom: "0"}}
                                 key={`${token_id}_card_header`}
-                                title={title}
-                                subheader={accountId !== owner_id ? <strong>by {formatAccountId(owner_id)}</strong> : `You own this!`}
+                                title={<span className={"nft-title"}>{title}</span>}
+                                subheader={accountId !== owner_id ? <strong>by <span className={"nft-author-name"}>{formatAccountId(owner_id)}</span></strong> : `You own this!`}
                             />
-                            <img  key={`${token_id}_card_main_media`} style={{width: "100%"}} src={media} onLoad={() => {}} onError={
-                                ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
-                            } />
                             <CardContent key={`${token_id}_card_main_content`}>
                                 <Typography gutterBottom component="div">
                                     Price
