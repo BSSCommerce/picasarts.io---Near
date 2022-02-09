@@ -44,7 +44,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     }, [loading]);
     let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
     let token = market.find(({ token_id }) => id === token_id);
-    let relatedTokens = market.filter((t) => t.owner_id == token.owner_id);
+    let relatedTokens = sales.filter((t) => t.owner_id == token.owner_id);
     const handleAddOffer = useCallback(async (account, token_id, offerToken, offerPrice) => {
         let result = await handleOffer(account, token_id, offerToken, offerPrice)
         if (result) {
