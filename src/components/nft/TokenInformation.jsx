@@ -6,9 +6,12 @@ import {
     Button,
     TextField,
     Grid,
-    Paper, Alert
+    Paper,
+    Alert,
+    Select,
+    MenuItem
 } from "@mui/material";
-import {getTokenOptions, handleOffer, parseNearAmount, token2symbol} from "../../state/near";
+import {getTokenOptions, handleOffer, parseNearAmount, token2symbol, handleBuyNow} from "../../state/near";
 import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
 import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
@@ -35,7 +38,6 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     const [price, setPrice] = useState('');
     const [ft, setFT] = useState('near');
     const [saleConditions, setSaleConditions] = useState({});
-
     useEffect(() => {
         if (!loading) {
             dispatch(loadItems(account))
@@ -44,6 +46,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     }, [loading]);
     let market = sales.concat(allTokens.filter(({ token_id }) => !sales.some(({ token_id: t}) => t === token_id)));
     let token = market.find(({ token_id }) => id === token_id);
+    const [isAuction, setIsAuction] = useState("1");
     let relatedTokens = sales.filter((t) => t.owner_id == token.owner_id);
     const handleAddOffer = useCallback(async (account, token_id, offerToken, offerPrice) => {
         let result = await handleOffer(account, token_id, offerToken, offerPrice)
@@ -51,7 +54,15 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
             setAddOfferErrorMessage(result);
         }
     }, [addOfferErrorMessage])
-
+    // useEffect(() => {
+    //     if (!loading && token) {
+    //        if (token.is_auction) {
+    //            setIsAuction("1")
+    //        } else {
+    //            setIsAuction("0")
+    //        }
+    //     }
+    // }, [loading,token, isAuction])
     return (
         <Box
             sx={{
@@ -120,6 +131,21 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                                 getTokenOptions(ft, setFT)
                                             }
                                         </Grid>
+
+                                        <Grid item xs={4}>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={isAuction}
+                                                label="Age"
+                                                onChange={(e) => setIsAuction(e.target.value)}
+                                                variant={"standard"}
+                                            >
+                                                <MenuItem value={"1"}>Enable Auction</MenuItem>
+                                                <MenuItem value={"0"}>Disable Auction</MenuItem>
+                                            </Select>
+                                        </Grid>
+
                                         <Grid item xs={2}>
                                             <Button variant={"contained"} onClick={() => {
                                                 if (!price.length) {
@@ -132,7 +158,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                                 setSaleConditions(newSaleConditions);
                                                 setPrice('');
                                                 setFT('near');
-                                                handleSaleUpdate(account, token.token_id, newSaleConditions);
+                                                handleSaleUpdate(account, token.token_id, newSaleConditions, isAuction);
                                             }}>Add</Button>
                                         </Grid>
                                     </Grid>
@@ -146,7 +172,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                             </div>
                         }
                         {
-                            accountId.length > 0 && accountId !== token.owner_id && <div className={"section add-offers"}>
+                            accountId.length > 0 && accountId !== token.owner_id && token.is_auction && <div className={"section add-offers"}>
                                 <p className="section-title">Add Offer</p>
                                 <Grid container columns={{ xs: 12 }} spacing={2}>
                                     <Grid item xs={4}>
@@ -168,7 +194,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         }
 
                         {
-                            token.bids && Object.keys(token.bids).length > 0 && <div className={"section bids"}>
+                            token.bids && Object.keys(token.bids).length > 0 && token.is_auction && <div className={"section bids"}>
                                 <p className="section-title">Offers</p>
                                 {
                                     Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
@@ -186,6 +212,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 }
                             </div>
                         }
+
                         <div className={"section token-info"}>
                             <p className="section-title">Token info</p>
                             <div className={"token-info-item"}>
@@ -209,6 +236,17 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
                             </div>
                         </div>
+
+                        {
+                            accountId.length > 0
+                            && accountId !== token.owner_id
+                            && !token.is_auction
+                            && token.sale_conditions
+                            && Object.keys(token.sale_conditions).length > 0
+                            && <div className={"section token-info"}>
+                                <Button variant={"contained"} onClick={() => handleBuyNow(account, token.token_id, offerToken)}>Buy Now</Button>
+                            </div>
+                        }
 
                     </Grid>
 

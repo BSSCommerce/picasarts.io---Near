@@ -50,6 +50,7 @@ impl Contract {
         token_id: String,
         ft_token_id: ValidAccountId,
         price: U128,
+        is_auction: bool
     ) {
         assert_one_yocto();
         let contract_id: AccountId = nft_contract_id.into();
@@ -63,6 +64,7 @@ impl Contract {
         if !self.ft_token_ids.contains(ft_token_id.as_ref()) {
             env::panic(format!("Token {} not supported by this market", ft_token_id).as_bytes());
         }
+        sale.is_auction = is_auction;
         sale.sale_conditions.insert(ft_token_id.into(), price);
         self.sales.insert(&contract_and_token_id, &sale);
     }
@@ -83,17 +85,17 @@ impl Contract {
 
         let deposit = env::attached_deposit();
         assert!(deposit > 0, "Attached deposit must be greater than 0");
-        // This is true logic: if offer = current price then process purchase,
-        // But should check and add warning at frontend.
-        // if !sale.is_auction && deposit == price {
-        //     self.process_purchase(
-        //         contract_id,
-        //         token_id,
-        //         ft_token_id,
-        //         U128(deposit),
-        //         buyer_id,
-        //     );
-        // } else {
+        // This is true logic
+        // If this token is not auction
+        if !sale.is_auction {
+            self.process_purchase(
+                contract_id,
+                token_id,
+                ft_token_id,
+                U128(price),
+                buyer_id,
+            );
+        } else {
             if sale.is_auction && price > 0 {
                 assert!(deposit >= price, "Attached deposit must be greater than reserve price");
             }
@@ -104,7 +106,7 @@ impl Contract {
                 buyer_id,
                 &mut sale,
             );
-        // }
+        }
     }
 
     #[private]

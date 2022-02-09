@@ -91,10 +91,12 @@ export const handleOffer = async (account, token_id, offerToken, offerPrice) => 
 					return "Can't pay less than or equal to latest bid price: " + formatNearAmount(latestBid.price, 4) + " NEAR";
 				}
 			}
+
 		} else {
 			console.log("Could not get sale");
 			return "Could not get NFT token information";
 		}
+
 
 		if (offerToken === 'near') {
 			await account.functionCall(marketId, 'offer', {
@@ -109,3 +111,35 @@ export const handleOffer = async (account, token_id, offerToken, offerPrice) => 
 	}
 
 };
+
+export const handleBuyNow = async (account, token_id, offerToken) => {
+	try {
+		if (offerToken !== 'near') {
+			return alert('currently only accepting NEAR offers');
+		}
+		const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id })
+		if (sale) {
+			let offerPrice = sale.sale_conditions.near;
+			console.log(offerPrice);
+			if (offerToken === 'near') {
+				await account.functionCall(marketId, 'offer', {
+					nft_contract_id: contractId,
+					token_id,
+				}, GAS, offerPrice);
+			} else {
+				/// todo ft_transfer_call
+			}
+
+		} else {
+			console.log("Could not get sale");
+			return "Could not get NFT token information";
+		}
+
+
+
+	} catch (e) {
+		console.log("could not handle offer:", e);
+	}
+
+};
+
