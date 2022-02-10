@@ -157,7 +157,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                                             </div>
                                             :
                                             <div className="center">
-                                                <button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
+                                                <Button variant={"text"} onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</Button>
                                             </div>
                                     }
                                 </Typography>

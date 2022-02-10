@@ -52,6 +52,10 @@ impl Contract {
         //call the internal method for adding the token to the owner
         self.internal_add_token_to_owner(&token.owner_id, &token_id);
 
+        // Create a memo message
+
+        let memo_message = format!("{}:{}:{}", token_id.clone(), token.owner_id.clone(), "mint".to_string());
+
         // Construct the mint log as per the events standard.
         let nft_mint_log: EventLog = EventLog {
             // Standard name ("nep171").
@@ -65,7 +69,7 @@ impl Contract {
                 // Vector of token IDs that were minted.
                 token_ids: vec![token_id.to_string()],
                 // An optional memo to include.
-                memo: None,
+                memo: Some(memo_message),
             }]),
         };
 

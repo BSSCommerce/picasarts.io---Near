@@ -188,12 +188,12 @@ impl Contract {
         buyer_id: AccountId,
     ) -> Promise {
         let sale = self.internal_remove_sale(nft_contract_id.clone(), token_id.clone());
-
+        let memo_message = format!("{}:{}:{}:{}", nft_contract_id.clone(), token_id.clone(), buyer_id.clone(), "payout from market".to_string());
         ext_contract::nft_transfer_payout(
             buyer_id.clone(),
             token_id,
             sale.approval_id,
-            "payout from market".to_string(),
+            memo_message,
             price,
 			10,
             &nft_contract_id,

@@ -17,6 +17,7 @@ export default function NftPage({id}) {
     }, [isLoading]);
 
     return (
+
         !isLoading && <TokenInformation {...{ app, views, update, loading, contractAccount, account, dispatch, id }} />
 
     )

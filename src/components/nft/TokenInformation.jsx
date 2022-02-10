@@ -12,13 +12,14 @@ import {
     MenuItem
 } from "@mui/material";
 import {getTokenOptions, handleOffer, parseNearAmount, token2symbol, handleBuyNow} from "../../state/near";
-import {handleAcceptOffer, handleSaleUpdate} from "../../state/actions";
+import {handleAcceptOffer, handleRegisterStorage, handleSaleUpdate} from "../../state/actions";
 import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import nearLogo from "src/public/static/img/near-logo.png";
 import NextLink from "next/link";
 import RelatedNFT from "./RelatedNFT";
+import ReactGA from "react-ga";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -29,7 +30,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     const {nearToUsd} = app;
     let accountId = '';
     if (account) accountId = account.accountId;
-    const { tokens, sales, allTokens } = views
+    const { tokens, sales, allTokens, marketStoragePaid } = views
     /// market
     const [offerPrice, setOfferPrice] = useState('');
     const [offerToken, setOfferToken] = useState('near');
@@ -105,7 +106,9 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                     <p>This token has no royalties.</p>
                             }
                         </div>
-
+                        <div className={"section page_view"}>
+                        { ReactGA.pageview(`/token/${id}`) }
+                        </div>
                         {
                             token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>
                                 <p className="section-title">Price</p>
@@ -119,7 +122,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                         }
 
                         {
-                            accountId === token.owner_id && <div className={"section add-price"}>
+                            accountId === token.owner_id &&  ( marketStoragePaid !== '0' ? <div className={"section add-price"}>
                                 <div>
                                     <p className="section-title">Add Price</p>
                                     <Grid container columns={{ xs: 12 }} spacing={2} style={{display: "flex"}}>
@@ -169,7 +172,9 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 <div>
                                     <i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
                                 </div>
-                            </div>
+                            </div> : <div className="section">
+                                <Button variant={"text"} onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</Button>
+                            </div>)
                         }
                         {
                             accountId.length > 0 && accountId !== token.owner_id && token.is_auction && <div className={"section add-offers"}>
@@ -252,8 +257,12 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
 
                 </Grid>
-                <h2>You might like</h2>
-                <RelatedNFT relatedTokens={relatedTokens} nearToUsd={nearToUsd} />
+                {
+                    relatedTokens && relatedTokens.length && <>
+                        <h2>You might like</h2>
+                        <RelatedNFT relatedTokens={relatedTokens} nearToUsd={nearToUsd} />
+                    </>
+                }
             </Container> }
 
 

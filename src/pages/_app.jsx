@@ -13,8 +13,28 @@ import favicon from "../public/static/favicon.ico";
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 import { AppProvider} from '../state/app';
+import ReactGA from 'react-ga';
+function initialiseAnalytics() {
+    const TRACKING_ID = "UA-51802709-35";
+    ReactGA.initialize(TRACKING_ID);
+}
 
+function usePageTracking() {
+    const [initialized, setInitialized] = useState(false);
+
+    useEffect(() => {
+        initialiseAnalytics();
+        setInitialized(true);
+    }, []);
+
+    useEffect(() => {
+        if (initialized) {
+            ReactGA.pageview(window.location.pathname + window.location.search);
+        }
+    }, [initialized]);
+}
 export default function MyApp(props) {
+    usePageTracking();
     const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
     return (
 
@@ -27,7 +47,6 @@ export default function MyApp(props) {
                     <title>NFT Marketplace</title>
                 </Head>
                 <ThemeProvider theme={theme}>
-                    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                     <CssBaseline />
                     <main>
                         <AppProvider>
