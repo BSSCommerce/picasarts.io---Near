@@ -28,14 +28,12 @@ const pageViewsAPI = async (req, res) => {
         })
 
         const pageViews = response?.data?.totalsForAllResults['ga:pageviews']
-
         let pageViewsCount = res.status(200).json({
             pageViews,
         })
-        console.log(pageViews);
         return pageViewsCount;
     } catch (err) {
-        console.log(err);
+        console.log("Error when integrate google analytics:", err);
         return res.status(500).json({ error: err.message })
     }
 }

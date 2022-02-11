@@ -21,7 +21,7 @@ const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
 
-export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id, viewcount }) => {
+export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id, viewCount }) => {
 
     if (!contractAccount) return null;
     const {nearToUsd} = app;
@@ -104,7 +104,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                             }
                         </div>
                         <div className={"section page_view"}>
-                          View Count: { viewcount }
+                          View Count: { viewCount }
                         </div>
                         {
                             token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>
