@@ -32,7 +32,7 @@ const pageViewsAPI = async (req, res) => {
         let pageViewsCount = res.status(200).json({
             pageViews,
         })
-        console.log(pageViewsCount);
+        console.log(pageViews);
         return pageViewsCount;
     } catch (err) {
         console.log(err);
