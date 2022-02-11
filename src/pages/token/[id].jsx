@@ -7,7 +7,7 @@ export default function NftPage({id}) {
     const { dispatch, state, update } = useContext(appStore);
     const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
     const { data } = useSWR(
-        `/api/google/pageview-count?post=${encodeURIComponent(`/token/${id}/`)}`,
+        `/api/google/pageview-count?post=${encodeURIComponent(`/token/${id}`)}`,
         async url => {
             const res = await fetch(url)
             return res.json()

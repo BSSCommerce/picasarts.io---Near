@@ -28,6 +28,7 @@ const pageViewsAPI = async (req, res) => {
         })
 
         const pageViews = response?.data?.totalsForAllResults['ga:pageviews']
+        console.log(response.data);
         let pageViewsCount = res.status(200).json({
             pageViews,
         })
