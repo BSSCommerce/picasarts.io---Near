@@ -9,6 +9,9 @@ const handler = async (req, res) => {
             let user = await User.findOne({
                 account_id: accountId
             });
+            if (!user) {
+                user = {};
+            }
             return res.status(200).send(user);
         } catch (error) {
             return res.status(500).send(error.message);

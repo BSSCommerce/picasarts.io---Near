@@ -89,3 +89,11 @@
 .nft-image img {
     width: 100%;
 }
+.token-image-wrapper.MuiGrid-item {
+    /*padding: 27px;*/
+    /*background-color: burlywood;*/
+    /*border-radius: 15px 0 0;*/
+}
+.token-information-main {
+
+}

@@ -37,7 +37,12 @@ let user = new Schema({
     wallet_address: {
         type: String,
         required: false
+    },
+    collection_name: {
+        type: String,
+        required: false
     }
+
 });
 mongoose.models = {};
 let User = mongoose.model('User', user);

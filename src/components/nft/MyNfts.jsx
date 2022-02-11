@@ -48,16 +48,6 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
 
     let accountId = '';
     if (account) accountId = account.accountId;
-
-    /// market
-    const [offerPrice, setOfferPrice] = useState('');
-    const [offerToken, setOfferToken] = useState('near');
-
-    /// updating user tokens
-    const [price, setPrice] = useState('');
-    const [ft, setFT] = useState('near');
-    const [saleConditions, setSaleConditions] = useState({});
-
     useEffect(() => {
         if (!loading) {
             dispatch(loadItems(account))
@@ -99,7 +89,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
 
 
         <Grid container spacing={2} >
-            {!tokens.length && <p className="margin">No NFTs. Try minting something!</p>}
+            {!tokens.length && <p className="margin">No NFTs</p>}
             {
                 tokens.map(({
                                 metadata: { media, title },

@@ -24,7 +24,7 @@ export default function NftToken({media, title, owner_id, token_id, accountId, s
             sx={{ paddingBottom: "0"}}
             key={`${token_id}_card_header`}
             title={<span className={"nft-title"}>{title}</span>}
-            subheader={accountId !== owner_id ? <strong>by <span className={"nft-author-name"}>{formatAccountId(owner_id)}</span></strong> : `You own this!`}
+            subheader={accountId !== owner_id ? <strong>by <NextLink key={`${token_id}_collection_link`} href={"/collection/[account_id]"} as={`/collection/${owner_id}`} className={"nft-author-name"}>{formatAccountId(owner_id)}</NextLink></strong> : `You own this!`}
         />
         <CardContent key={`${token_id}_card_main_content`}>
             <Typography gutterBottom component="div">

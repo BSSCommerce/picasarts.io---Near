@@ -10,7 +10,8 @@ import {
     Card,
     CardContent,
     Typography,
-    CardMedia
+    CardMedia,
+    Alert
 } from "@mui/material";
 import ImageUpload from "src/components/common/ImageUpload";
 import { uploadToCrust } from "near-crust-ipfs";
@@ -27,6 +28,8 @@ export default function ProfileForm({ account }) {
     const [banner, setBanner] = useState('');
     const [validLogoMedia, setValidLogoMedia] = useState(true);
     const [validBannerMedia, setValidBannerMedia] = useState(true);
+    const [collectionName, setCollectionName] = useState("");
+    const [isSuccessSave, setIsSuccessSave] = useState(0);
     async function fetchData(accountId) {
         let getProfileReq = await fetch(`/api/profile/get/${accountId}`);
         let data = await getProfileReq.json();
@@ -39,6 +42,7 @@ export default function ProfileForm({ account }) {
             setWebsite(data.website);
             setLogo(data.logo);
             setBanner(data.banner);
+            setCollectionName(data.collection_name)
         }
     }
 
@@ -71,18 +75,32 @@ export default function ProfileForm({ account }) {
                 banner: bannerPath,
                 twitter,
                 instagram,
-                walletAddress
+                walletAddress,
+                collectionName: collectionName
             })
         });
         if (res.status !== 200) {
-            console.log("could not create profile")
+            setIsSuccessSave(1);
+        } else {
+            setIsSuccessSave(2)
         }
         setIsLoading(false);
-    }, [isLoading, email, bio, website, logo, banner])
+    }, [isLoading, email, bio, website, logo, banner, collectionName, isSuccessSave])
     return (
             <Grid className={"profile-settings-form"} container spacing={2}>
                 <Grid item xs={6}>
                     <h4>Profile Settings</h4>
+                    <div className={"form-control"}>
+                    {
+                        isSuccessSave === 2 && <Alert severity="success">Save profile information successfully</Alert>
+                    }
+                    {
+                        isSuccessSave === 1 && <Alert severity="success">Fail to save profile information</Alert>
+                    }
+                    </div>
+                    <div className={"form-control"}>
+                        <TextField variant={"outlined"} fullWidth label={"Collection Name"} value={collectionName} onChange={(e) => setCollectionName(e.target.value)} />
+                    </div>
                     <div className={"form-control"}>
                         <TextField variant={"outlined"} fullWidth label={"Email"} value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
@@ -146,7 +164,10 @@ export default function ProfileForm({ account }) {
                                 </div>
                                 <div className={"picasart-name-bio"}>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        {account.accountId}
+                                        {collectionName ? collectionName : account.accountId}
+                                    </Typography>
+                                    <Typography gutterBottom variant="p" component="div">
+                                        By {account.accountId}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {

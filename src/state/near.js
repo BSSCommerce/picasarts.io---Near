@@ -85,7 +85,7 @@ export const handleOffer = async (account, token_id, offerToken, offerPrice) => 
 		}
 		const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id })
 		if (sale) {
-			let latestBid = sale.bids.near.length ? sale.bids.near[sale.bids.near.length - 1] : false;
+			let latestBid = sale.bids.near && sale.bids.near.length ? sale.bids.near[sale.bids.near.length - 1] : false;
 			if (latestBid) {
 				if (parseFloat(formatNearAmount(latestBid.price, 4)) > parseFloat(offerPrice)) {
 					return "Can't pay less than or equal to latest bid price: " + formatNearAmount(latestBid.price, 4) + " NEAR";

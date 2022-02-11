@@ -8,12 +8,17 @@ import {
 import useSWR from 'swr'
 import React from "react";
 const fetcher = async (url) => {
-    const res = await fetch(url)
-    const data = await res.json()
-
-    if (res.status !== 200) {
-        throw new Error(data.message)
+    let data = null;
+    try {
+        const res = await fetch(url);
+        data = await res.json()
+        if (res.status !== 200) {
+            throw new Error(data.message)
+        }
+    } catch (e) {
+        console.log(e)
     }
+
     return data
 }
 export default function ProfileBanner({account}) {
@@ -24,39 +29,42 @@ export default function ProfileBanner({account}) {
     if (!data) return <div>Loading...</div>
     return (
         <div className={"picasart-profile-banner"}>
-            <Card sx={{ maxWidth: "100%" }}>
-                { data.banner ?
+            <Card sx={{maxWidth: "100%"}}>
+                {data.banner ?
 
                     <CardMedia
                         component="img"
                         height="250"
                         image={data.banner}
-                        alt="green iguana"
+                        alt={account.accountId}
                     />
                     : <CardMedia
                         component="img"
                         height="250"
                         image={"https://source.unsplash.com/random"}
-                        alt="green iguana"
+                        alt={account.accountId}
                     />
                 }
                 <CardContent>
                     <div className={"picasart-avatar"}>
                         {
                             data.logo ? <Avatar
-                                alt="Remy Sharp"
+                                alt={account.accountId}
                                 src={data.logo}
-                                sx={{ width: 56, height: 56 }}
+                                sx={{width: 56, height: 56}}
                             /> : <Avatar
-                                alt="Remy Sharp"
+                                alt={account.accountId}
                                 src={"https://source.unsplash.com/random"}
-                                sx={{ width: 56, height: 56 }}
+                                sx={{width: 56, height: 56}}
                             />
                         }
                     </div>
                     <div className={"picasart-name-bio"}>
                         <Typography gutterBottom variant="h5" component="div">
-                            {data.account_id}
+                            {data.collection_name ? data.collection_name : account.accountId}
+                        </Typography>
+                        <Typography gutterBottom variant="p" component="div">
+                            by {account.accountId}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {data.bio}

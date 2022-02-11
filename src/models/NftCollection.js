@@ -21,10 +21,6 @@ let nftCollection = new Schema({
     account_id: {
         type: String,
         required: true
-    },
-    collection_id: {
-        type: String,
-        required: true
     }
 });
 mongoose.models = {};

@@ -4,9 +4,8 @@ import User from "src/models/User";
 const handler = async (req, res) => {
     if (req.method === 'POST') {
         // Check if name, logo or description is provided
-        const { account_id, logo, banner, bio, email, twitter, instagram, website, walletAddress } = req.body;
-        console.log(req.body);
-        if (account_id && email) {
+        const { account_id, logo, banner, bio, email, twitter, instagram, website, walletAddress, collectionName } = req.body;
+        if (account_id) {
             try {
                 let checkedUser = await User.findOneAndUpdate({
                     account_id: account_id
@@ -19,7 +18,8 @@ const handler = async (req, res) => {
                     twitter,
                     instagram,
                     website,
-                    wallet_address: walletAddress
+                    wallet_address: walletAddress,
+                    collection_name: collectionName
                 }, {upsert: true});
                 // Create new user
                 return res.status(200).send(checkedUser);

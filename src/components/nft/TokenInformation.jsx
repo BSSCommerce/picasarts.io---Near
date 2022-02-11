@@ -71,40 +71,20 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
         >
             { token && <Container maxWidth="lg">
                 <Grid container className={"token-information"} columns={{ xs: 12 }} spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} className={"token-image-wrapper"}>
                         <img style={{width: "100%"}} src={token.metadata.media} onLoad={() => {}} onError={
                             ({target}) => { target.onerror = null; target.src='https://source.unsplash.com/random' }
                         } />
-                        <div className={"section description"}>
-                            <p className="section-title">Description</p>
-                            <p>
-                                {token.metadata.description}
-                            </p>
-                        </div>
+
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} className={"token-information-main"}>
                         <div className={"section header"}>
                             <Typography component="div" variant="h4">
                                 <strong>{ token.metadata.title }</strong>
                             </Typography>
                             <Typography component="p">
-                                Owned by <strong> <span className={"nft-author-name"}>{token.owner_id}</span></strong>
+                                 By <strong> <span className={"nft-author-name"}>{token.owner_id}</span></strong>
                             </Typography>
-                        </div>
-
-                        <div className={"section royalties"}>
-                            <p className="section-title">Royalties</p>
-                            {
-                                token.royalty && Object.keys(token.royalty).length > 0 ?
-                                    Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
-                                        {receiver} - {amount / 100}%
-                                    </div>)
-                                    :
-                                    <p>This token has no royalties.</p>
-                            }
-                        </div>
-                        <div className={"section page_view"}>
-                          View Count: { viewCount }
                         </div>
                         {
                             token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>
@@ -117,6 +97,36 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
 
                             </div>) : ""
                         }
+                        <div className={"section description"}>
+                            <p className="section-title">Description</p>
+                            <p>
+                                {token.metadata.description}
+                            </p>
+                        </div>
+                        <Grid container columns={{ xs: 12 }} spacing={2}>
+                            <Grid item xs={6}>
+                                <div className={"section royalties"}>
+                                    <p className="section-title">Royalties</p>
+                                    {
+                                        token.royalty && Object.keys(token.royalty).length > 0 ?
+                                            Object.entries(token.royalty).map(([receiver, amount]) => <div key={receiver}>
+                                                {receiver} - {amount / 100}%
+                                            </div>)
+                                            :
+                                            <p>No royalties.</p>
+                                    }
+                                </div>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <div className={"section page_view"}>
+                                    <p className="section-title">Views</p>
+                                    <p>{ viewCount }</p>
+                                </div>
+                            </Grid>
+                        </Grid>
+
+
+
 
                         {
                             accountId === token.owner_id &&  ( marketStoragePaid !== '0' ? <div className={"section add-price"}>
