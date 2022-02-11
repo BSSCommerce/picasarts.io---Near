@@ -13,18 +13,15 @@ import {
 } from "@mui/material";
 import {getTokenOptions, handleOffer, parseNearAmount, token2symbol, handleBuyNow} from "../../state/near";
 import {handleAcceptOffer, handleRegisterStorage, handleSaleUpdate} from "../../state/actions";
-import {CurrencySymbol} from "src/components/layout/CurrencySymbol";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
-import nearLogo from "src/public/static/img/near-logo.png";
 import NextLink from "next/link";
 import RelatedNFT from "./RelatedNFT";
-import ReactGA from "react-ga";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
 
-export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id }) => {
+export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id, viewcount }) => {
 
     if (!contractAccount) return null;
     const {nearToUsd} = app;
@@ -107,7 +104,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                             }
                         </div>
                         <div className={"section page_view"}>
-                        { ReactGA.pageview(`/token/${id}`) }
+                          View Count: { viewcount }
                         </div>
                         {
                             token.sale_conditions ? Object.entries(token.sale_conditions).map(([ft_token_id, price]) => <div  className={"section sale"} key={ft_token_id}>

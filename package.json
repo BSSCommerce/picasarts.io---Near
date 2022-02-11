@@ -22,6 +22,7 @@
     "@polkadot/util": "^8.3.2",
     "bn": "^1.0.5",
     "copy-to-clipboard": "^3.3.1",
+    "googleapis": "^95.0.0",
     "ipfs-http-client": "^55.0.0",
     "isomorphic-fetch": "^3.0.0",
     "mongoose": "^6.1.7",
@@ -33,7 +34,6 @@
     "react": "latest",
     "react-dom": "latest",
     "react-dropzone": "^11.5.1",
-    "react-ga": "^3.3.0",
     "swr": "^1.1.2"
   },
   "devDependencies": {
