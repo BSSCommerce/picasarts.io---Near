@@ -40,7 +40,7 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const MyNfts = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
+export const MyNfts = ({ app, views, update, contractAccount, account, loading, dispatch, ownerId }) => {
     if (!contractAccount) return null;
 
     const { tab, sort, filter, nearToUsd } = app;
@@ -50,8 +50,8 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
     if (account) accountId = account.accountId;
     useEffect(() => {
         if (!loading) {
-            dispatch(loadItems(account))
-            dispatch(getMarketStoragePaid(account))
+            dispatch(loadItems({accountId: ownerId}))
+            dispatch(getMarketStoragePaid({accountId: ownerId}))
         }
     }, [loading]);
 
@@ -89,6 +89,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
 
 
         <Grid container spacing={2} >
+
             {!tokens.length && <p className="margin">No NFTs</p>}
             {
                 tokens.map(({

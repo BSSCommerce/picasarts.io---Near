@@ -3,24 +3,20 @@ import { getMarketStoragePaid, loadItems } from 'src/state/views';
 import {Grid} from "@mui/material";
 import NftToken from "./NftToken";
 
-export const Sales = ({ app, views, loading, contractAccount, account, dispatch }) => {
+export const Sales = ({ app, views, loading, contractAccount, account, dispatch, numberOfTokens }) => {
     if (!contractAccount) return null;
     const { nearToUsd } = app;
     const { sales, allTokens } = views
-    let accountId = '';
-    if (account) accountId = account.accountId;
-    let market = sales;
-    market = market.concat(allTokens.filter(({ token_id }) => !market.some(({ token_id: t}) => t === token_id)));
+    let latestSales = sales.slice(0, (sales.length > numberOfTokens && numberOfTokens !== 0) ? numberOfTokens : sales.length);
     useEffect(() => {
         if (!loading) {
-            dispatch(loadItems(account))
-            dispatch(getMarketStoragePaid(account))
+            dispatch(loadItems())
         }
     }, [loading]);
     return <Grid container spacing={2}>
 
         {
-            sales.map(({
+            latestSales.map(({
                             metadata: { media, title },
                             owner_id,
                             token_id,

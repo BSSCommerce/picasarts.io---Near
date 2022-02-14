@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase'
-const pages = ['Explore', 'My Collectives', 'Create'];
+const pages = ['All NFTs', "Collections", 'Create'];
 const settings = ['Dashboard', 'Settings', 'Logout'];
 import { appStore } from '../../state/app';
 import {Wallet} from "../nft/Wallet";
@@ -96,9 +96,9 @@ const ResponsiveAppBar = () => {
     const pageList = pages.map((page) => {
             let url = "/";
             if (page == pages[0]) {
-                url = "/";
+                url = "/all-nfts";
             } else if (page == pages[1]) {
-                url = "/account/dashboard";
+                url = "/collections";
             } else {
                 url = "/create"
             }
@@ -203,7 +203,7 @@ const ResponsiveAppBar = () => {
                                 <ListItemIcon>
                                     <DashboardIcon fontSize="small" />
                                 </ListItemIcon>
-                                <NextLink href={"/account/dashboard"}><Typography textAlign={"Left"} >Dashboard</Typography></NextLink>
+                                <NextLink href={"/account/dashboard"}><Typography textAlign={"Left"} >My NFTs</Typography></NextLink>
                             </MenuItem>
                             <MenuItem key={"Dashboard"}>
                                 <ListItemIcon>

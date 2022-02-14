@@ -9,6 +9,7 @@ import {useContext, useEffect, useState} from "react";
 import { Sales } from "../components/nft/Sales";
 import Router from "next/router";
 import backgroundImage from "../public/static/img/bg_4.png";
+import LatestCollections from "../components/collection/LatestCollections";
 export default function Index() {
     const [isFirstLoading, setIsFirstLoading] = useState(true);
     const { dispatch, state, update } = useContext(appStore);
@@ -53,13 +54,16 @@ export default function Index() {
                         spacing={2}
                         justifyContent="center"
                     >
-                        <Button variant={"contained"} onClick={() => Router.push("/")}>Explore</Button>
+                        <Button variant={"contained"} onClick={() => Router.push("/all-nfts")}>Explore</Button>
                         <Button variant="contained"  onClick={() => Router.push("/create")}>Create</Button>
                     </Stack>
                 </Container>
             </Box>
             <Container sx={{ py: 8 }} maxWidth="lg" style={{paddingTop: "0", marginTop:"-40px"}}>
-                <Sales {...{ app, views, update, loading, contractAccount, account, dispatch }} />
+                <Sales {...{ app, views, update, loading, contractAccount, account, dispatch, numberOfTokens: 8  }} />
+            </Container>
+            <Container sx={{ py: 8 }} maxWidth="lg" style={{paddingTop: "0", marginTop:"-40px"}}>
+                <LatestCollections />
             </Container>
         </>
     );

@@ -5,13 +5,10 @@ import {appStore, onAppMount} from "src/state/app";
 import {MyNfts} from "src/components/nft/MyNfts";
 import Container from "@mui/material/Container";
 
-export default function Index({account_id}) {
+export default function Index({ownerId}) {
     const { state, dispatch, update } = useContext(appStore);
 
-    const { app, views, contractAccount, loading } = state;
-    let account = {
-        accountId: account_id
-    }
+    const { app, views, contractAccount, loading, account } = state;
     const onMount = () => {
         dispatch(onAppMount());
     };
@@ -23,9 +20,9 @@ export default function Index({account_id}) {
                 bgcolor: 'background.paper',
             }}
         >
-            <ProfileBanner account={account}/>
+            <ProfileBanner account={ownerId}/>
             <Container sx={{ py: 8 }} maxWidth="lg">
-                <MyNfts {...{ app, views, update, loading, contractAccount, account, dispatch }} />
+                <MyNfts {...{ app, views, update, loading, contractAccount, account, dispatch, ownerId }} />
             </Container> }
         </Box>
     )
@@ -33,7 +30,7 @@ export default function Index({account_id}) {
 
 Index.getInitialProps = async ({query}) => {
     return {
-        account_id: query.account_id
+        ownerId: query.owner_id
     }
 }
 

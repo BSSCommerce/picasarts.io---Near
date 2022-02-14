@@ -15,14 +15,15 @@ const fetcher = async (url) => {
         if (res.status !== 200) {
             throw new Error(data.message)
         }
+        console.log(data)
     } catch (e) {
         console.log(e)
     }
 
     return data
 }
-export default function ProfileBanner({account}) {
-    const { data, error } = useSWR(`/api/profile/get/${account.accountId}`,
+export default function ProfileBanner({ownerId}) {
+    const { data, error } = useSWR(`/api/profile/get/${ownerId}`,
         fetcher
     )
     if (error) return <div></div>
@@ -36,24 +37,24 @@ export default function ProfileBanner({account}) {
                         component="img"
                         height="250"
                         image={data.banner}
-                        alt={account.accountId}
+                        alt={ownerId}
                     />
                     : <CardMedia
                         component="img"
                         height="250"
                         image={"https://source.unsplash.com/random"}
-                        alt={account.accountId}
+                        alt={ownerId}
                     />
                 }
                 <CardContent>
                     <div className={"picasart-avatar"}>
                         {
                             data.logo ? <Avatar
-                                alt={account.accountId}
+                                alt={ownerId}
                                 src={data.logo}
                                 sx={{width: 56, height: 56}}
                             /> : <Avatar
-                                alt={account.accountId}
+                                alt={ownerId}
                                 src={"https://source.unsplash.com/random"}
                                 sx={{width: 56, height: 56}}
                             />
@@ -61,10 +62,10 @@ export default function ProfileBanner({account}) {
                     </div>
                     <div className={"picasart-name-bio"}>
                         <Typography gutterBottom variant="h5" component="div">
-                            {data.collection_name ? data.collection_name : account.accountId}
+                            {data.collection_name ? data.collection_name :ownerId}
                         </Typography>
                         <Typography gutterBottom variant="p" component="div">
-                            by {account.accountId}
+                            by {ownerId}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {data.bio}

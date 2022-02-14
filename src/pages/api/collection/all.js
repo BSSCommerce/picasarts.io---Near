@@ -1,13 +1,13 @@
 import connectDB from 'src/middleware/mongodb';
-import NftCollection from "src/models/NftCollection";
+import User from "src/models/User";
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {
-        // Check if name, logo or description is provided
-
+        const { limit } = req.query
         try {
-            let collections = await NftCollection.find({
-            });
+            // One User - One Collection
+            let collections = await User.find({
+            }).limit(limit ? limit : 1000);
             return res.status(200).send(collections);
         } catch (error) {
             return res.status(500).send(error.message);
