@@ -10,10 +10,12 @@ import { Sales } from "../components/nft/Sales";
 import Router from "next/router";
 import backgroundImage from "../public/static/img/bg_4.png";
 import LatestCollections from "../components/collection/LatestCollections";
+import HeroBanner from "../components/layout/HeroBanner";
 export default function Index() {
     const [isFirstLoading, setIsFirstLoading] = useState(true);
     const { dispatch, state, update } = useContext(appStore);
     const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+    const { isLoadingTokens } = views;
     const onMount = () => {
         dispatch(onAppMount());
     };
@@ -27,43 +29,14 @@ export default function Index() {
     return (
         <>
             {/* Hero unit */}
-            <Box
-                sx={{
-                    bgcolor: 'background.paper',
-                    pt: 8,
-                    pb: 6,
-                    backgroundImage:`url(${backgroundImage.src})`
-                }}
-            >
-                <Container maxWidth="md">
-                    <Typography
-                        component="h1"
-                        variant="h2"
-                        align="center"
-                        color="white"
-                        gutterBottom
-                    >
-                        Discover, collect, and sell extraordinary NFTs
-                    </Typography>
-                    <Typography variant="h5" align="center" color="white" paragraph>
-                        NFT marketplace for everyone
-                    </Typography>
-                    <Stack
-                        sx={{ pt: 4 }}
-                        direction="row"
-                        spacing={2}
-                        justifyContent="center"
-                    >
-                        <Button variant={"contained"} onClick={() => Router.push("/all-nfts")}>Explore</Button>
-                        <Button variant="contained"  onClick={() => Router.push("/create")}>Create</Button>
-                    </Stack>
-                </Container>
-            </Box>
+            <HeroBanner />
             <Container sx={{ py: 8 }} maxWidth="lg" style={{paddingTop: "0", marginTop:"-40px"}}>
                 <Sales {...{ app, views, update, loading, contractAccount, account, dispatch, numberOfTokens: 8  }} />
             </Container>
             <Container sx={{ py: 8 }} maxWidth="lg" style={{paddingTop: "0", marginTop:"-40px"}}>
-                <LatestCollections />
+                {
+                    !isLoadingTokens && <LatestCollections/>
+                }
             </Container>
         </>
     );

@@ -19,7 +19,8 @@ const initialState = {
 		sales: [],
 		allTokens: [],
 		currentToken: null,
-		offerErrorMessage: ""
+		offerErrorMessage: "",
+		isLoadingTokens: true
 	}
 };
 let snackTimeout;

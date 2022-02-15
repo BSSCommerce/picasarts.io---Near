@@ -21,23 +21,24 @@ const Create = () => {
 
 
     return (
-       <Box
-            sx={{
-                bgcolor: 'background.paper',
-                pt: 8,
-                pb: 6,
-            }}
-        >
+       <>
 
             {
-                signedIn && <Minting {...{ near, update, wallet, account }} />
+                signedIn && <Box
+                    sx={{
+                        bgcolor: 'background.paper',
+                        pt: 8,
+                        pb: 6,
+                    }}>
+                    <Minting {...{ near, update, wallet, account }} />
+                </Box>
 
             }
             {
                 !signedIn && <NotLoggedIn wallet={wallet} />
             }
 
-        </Box>
+        </>
         )
 };
 

@@ -17,6 +17,7 @@ import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import NextLink from "next/link";
 import RelatedNFT from "./RelatedNFT";
+import {formatAccountId} from "../../utils/near-utils";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
@@ -83,7 +84,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 <strong>{ token.metadata.title }</strong>
                             </Typography>
                             <Typography component="p">
-                                 By <strong> <span className={"nft-author-name"}>{token.owner_id}</span></strong>
+                                 By <strong> <span className={"nft-author-name"}><NextLink key={`${token.owner_id}_collection_link`} href={"/collection/[owner_id]"} as={`/collection/${token.owner_id}`} className={"nft-author-name"}>{token.owner_id}</NextLink></span></strong>
                             </Typography>
                         </div>
                         {
@@ -152,7 +153,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                                 variant={"standard"}
                                             >
                                                 <MenuItem value={"1"}>Enable Auction</MenuItem>
-                                                <MenuItem value={"0"}>Disable Auction</MenuItem>
+                                                <MenuItem value={"0"}>Buy Now</MenuItem>
                                             </Select>
                                         </Grid>
 
@@ -243,7 +244,7 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 <span>
                                     <a href={token.metadata.media} target="_blank">{token.metadata.media.slice(0, 30)}...</a>
                                     <span> | </span>
-                                    <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${token.metadata.media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
+                                    <NextLink href={"/crustscan/[cid]"} as={`/crustscan/${token.metadata.media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
                                 </span>
 
                             </div>

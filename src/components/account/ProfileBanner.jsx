@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import useSWR from 'swr'
 import React from "react";
+import Container from "@mui/material/Container";
+import Skeleton from "@mui/material/Skeleton";
 const fetcher = async (url) => {
     let data = null;
     try {
@@ -27,7 +29,11 @@ export default function ProfileBanner({ownerId}) {
         fetcher
     )
     if (error) return <div></div>
-    if (!data) return <div>Loading...</div>
+    if (!data) return <Container maxWidth="md">
+        <Skeleton />
+        <Skeleton animation="wave" />
+        <Skeleton animation={false} />
+    </Container>
     return (
         <div className={"picasart-profile-banner"}>
             <Card sx={{maxWidth: "100%"}}>
@@ -62,7 +68,7 @@ export default function ProfileBanner({ownerId}) {
                     </div>
                     <div className={"picasart-name-bio"}>
                         <Typography gutterBottom variant="h5" component="div">
-                            {data.collection_name ? data.collection_name :ownerId}
+                            {data.collection_name ? data.collection_name : ownerId}
                         </Typography>
                         <Typography gutterBottom variant="p" component="div">
                             by {ownerId}

@@ -13,7 +13,9 @@ import {
     Grid,
     TextField,
     Stack,
-    Paper, CardHeader
+    Paper, CardHeader,
+    Box,
+    Skeleton
 } from "@mui/material"
 import { styled } from '@mui/material/styles';
 import {formatAccountId} from "../../utils/near-utils";
@@ -44,7 +46,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
     if (!contractAccount) return null;
 
     const { tab, sort, filter, nearToUsd } = app;
-    const { tokens, sales, allTokens, marketStoragePaid } = views
+    const { tokens, sales, allTokens, marketStoragePaid, isLoadingTokens } = views
 
     let accountId = '';
     if (account) accountId = account.accountId;
@@ -61,7 +63,6 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
     }
     market.sort(sortFunctions[sort]);
     tokens.sort(sortFunctions[sort]);
-
 
     return <>
 
@@ -89,8 +90,19 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
 
 
         <Grid container spacing={2} >
+            {
+                isLoadingTokens && [1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+                    return <Grid item key={`skeleton-${i}`} xs={6} sm={4} md={3}>
+                        <Skeleton variant="rectangular" height={118}/>
+                        <Skeleton/>
+                        <Skeleton width="60%"/>
+                    </Grid>
+                })
 
-            {!tokens.length && <p className="margin">No NFTs</p>}
+            }
+            {
+                (!tokens.length && !isLoadingTokens) && <>No NFT found</>
+            }
             {
                 tokens.map(({
                                 metadata: { media, title },
@@ -155,7 +167,7 @@ export const MyNfts = ({ app, views, update, contractAccount, account, loading, 
                                 <div className={"nft-card-actions"}>
                                     <NextLink href={"/token/[id]"} as={`/token/${token_id}`} >See Details</NextLink>
                                     <span> | </span>
-                                    <NextLink href={"/cruscan/[cid]"} as={`/cruscan/${media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
+                                    <NextLink href={"/crustscan/[cid]"} as={`/crustscan/${media.replace("https://crustwebsites.net/ipfs/", "")}`}>Scan</NextLink>
                                 </div>
 
                             </CardContent>

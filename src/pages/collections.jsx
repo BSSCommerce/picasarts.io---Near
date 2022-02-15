@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import All from "../components/collection/All";
 import useSWR from 'swr';
 import Container from "@mui/material/Container";
+import Skeleton from "@mui/material/Skeleton";
+import HeroBanner from "../components/layout/HeroBanner";
 const fetcher = async (url) => {
     let data = null;
     try {
@@ -21,10 +23,18 @@ export default function Collections() {
         fetcher
     )
     if (error) return <div></div>
-    if (!data) return <div>Loading...</div>
+    if (!data) return <Container maxWidth="md">
+        <Skeleton />
+        <Skeleton animation="wave" />
+        <Skeleton animation={false} />
+    </Container>
     return (
-        <Container sx={{ py: 8 }} maxWidth="lg">
-            <All collections={data} />
-        </Container>
+        <>
+            <HeroBanner />
+            <Container sx={{ py: 8 }} maxWidth="lg">
+                <All collections={data} />
+            </Container>
+        </>
+
     )
 }

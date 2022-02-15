@@ -24,6 +24,7 @@ import logoWhite from "src/public/static/logo_white.svg";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {formatAccountId} from "../../utils/near-utils";
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -183,8 +184,8 @@ const ResponsiveAppBar = () => {
                                 {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu  }} />}
                             {/*</IconButton>*/}
                         </Tooltip>
-                        <Menu
-                            sx={{ mt: '50px'}}
+                        {signedIn && <Menu
+                            sx={{mt: '50px'}}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -199,26 +200,30 @@ const ResponsiveAppBar = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem key={"Dashboard"}>
+                            <MenuItem key={"menu-nft-collection"}>
                                 <ListItemIcon>
-                                    <DashboardIcon fontSize="small" />
+                                    <DashboardIcon fontSize="small"/>
                                 </ListItemIcon>
-                                <NextLink href={"/account/dashboard"}><Typography textAlign={"Left"} >My NFTs</Typography></NextLink>
+                                <NextLink key={`${account.accountId}_collection_link`} href={"/collection/[owner_id]"}
+                                          as={`/collection/${account.accountId}`}
+                                          className={"nft-author-name"}><Typography textAlign={"Left"}>My NFTs</Typography></NextLink>
                             </MenuItem>
-                            <MenuItem key={"Dashboard"}>
+                            <MenuItem key={"menu-account-settings"}>
                                 <ListItemIcon>
-                                    <SettingsIcon fontSize="small" />
+                                    <SettingsIcon fontSize="small"/>
                                 </ListItemIcon>
-                                <NextLink href={"/account/settings"}><Typography textAlign={"Left"} >Settings</Typography></NextLink>
+                                <NextLink href={"/account/settings"}><Typography
+                                    textAlign={"Left"}>Settings</Typography></NextLink>
                             </MenuItem>
-                            <Divider />
-                            <MenuItem key={"Dashboard"} onClick={() => wallet.signOut()}>
+                            <Divider/>
+                            <MenuItem key={"menu-account-logout"} onClick={() => wallet.signOut()}>
                                 <ListItemIcon>
-                                    <LogoutIcon fontSize="small" />
+                                    <LogoutIcon fontSize="small"/>
                                 </ListItemIcon>
                                 <Typography textAlign={"Left"}>Logout</Typography>
                             </MenuItem>
                         </Menu>
+                        }
                     </Box>
 
                 </Toolbar>

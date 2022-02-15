@@ -2,7 +2,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot, crustTypes } from '@crustio/type-definitions';
 import { useState, useEffect, useCallback } from "react";
 import Router from "next/router";
-import DataList from "src/components/cruscan/DataList";
+import DataList from "src/components/crustscan/DataList";
 import Box from "@mui/material/Box";
 import {Button, Container, Grid, TextField} from "@mui/material";
 

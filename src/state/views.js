@@ -21,7 +21,7 @@ export const getMarketStoragePaid = (account) => async ({ update, getState }) =>
 }
 
 export const loadItems = (account) => async ({ update, getState }) => {
-
+    update('views', { isLoadingTokens: true })
     const { contractAccount } = getState()
 	
     /// user tokens
@@ -123,7 +123,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
 
     allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
-    update('views', { tokens, sales, allTokens })
+    update('views', { tokens, sales, allTokens, isLoadingTokens: false })
     return { tokens, sales, allTokens }
 };
 

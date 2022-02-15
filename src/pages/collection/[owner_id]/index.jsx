@@ -20,10 +20,10 @@ export default function Index({ownerId}) {
                 bgcolor: 'background.paper',
             }}
         >
-            <ProfileBanner account={ownerId}/>
+            <ProfileBanner ownerId={ownerId}/>
             <Container sx={{ py: 8 }} maxWidth="lg">
                 <MyNfts {...{ app, views, update, loading, contractAccount, account, dispatch, ownerId }} />
-            </Container> }
+            </Container>
         </Box>
     )
 }
