@@ -28,11 +28,11 @@ A PoC backbone for NFT Marketplaces on NEAR Protocol.
 - [x] implement simple collection feature: each near wallet account has a collection name.
 - [x] show collections & NFTs on home page
 - [x] show related NFTs item on NFT detailed page.
-- [] switch between chains (NEAR, Aurora, XRP, Ethereum...)
+- [ ] switch between chains (NEAR, Aurora, XRP, Ethereum...)
 - [ ] connect with bridged tokens e.g. buy and sell with wETH/nDAI (or whatever we call these)
 
 ## Tech Stack
-- [NextJS](https://nextjs.org/)
+- [NextJS 11](https://nextjs.org/)
 - [Mongo Atlas](https://www.mongodb.com/atlas/database)
 - [MUI](https://mui.com/)
 - Smart Contracts use [Rust](https://www.rust-lang.org/)
