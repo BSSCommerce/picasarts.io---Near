@@ -18,3 +18,5 @@ yarn-error.log*
 /.next
 /contracts/market-contract/target
 /contracts/nft-contract/target
+package-lock.json
+.env

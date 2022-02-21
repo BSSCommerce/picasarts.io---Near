@@ -1,10 +1,10 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot, crustTypes } from '@crustio/type-definitions';
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Router from "next/router";
 import DataList from "src/components/crustscan/DataList";
 import Box from "@mui/material/Box";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import {Button, CircularProgress, Container, Grid, TextField} from "@mui/material";
 
 
 export default function CrustScanCid({cid, crustApi}) {
@@ -13,8 +13,11 @@ export default function CrustScanCid({cid, crustApi}) {
     const [isFirstLoading, setIsFirstLoading] = useState(true)
     const [fileData, setFileData] = useState(null);
     const [currentCid, setCurrentCid] = useState(cid)
+    const [isLoadingData, setIsLoadingData] = useState(false);
     async function fetchData(cid) {
+        setIsLoadingData(true);
         try {
+
             const crustApi = new ApiPromise({
                 provider: new WsProvider(crustRpcChainEndpoint),
                 typesBundle: typesBundleForPolkadot,
@@ -27,6 +30,7 @@ export default function CrustScanCid({cid, crustApi}) {
         } catch (e) {
             console.log("Could not fetch file data", e);
         }
+        setIsLoadingData(false);
     }
     useEffect(() => {
         if (isFirstLoading) {
@@ -53,11 +57,15 @@ export default function CrustScanCid({cid, crustApi}) {
                         <TextField style={{width: "100%"}} variant={"standard"} placeholder={"CID"} value={currentCid} onChange={(e) => setCurrentCid(e.target.value)} />
                     </Grid>
                     <Grid item xs={3}>
-                        <Button variant={"contained"} onClick={handleSearch}>Search</Button>
+                        <Button disabled={isLoadingData} variant={"contained"} onClick={handleSearch}>
+                            {isLoadingData && <CircularProgress size={14} />}
+                            {!isLoadingData && 'Search'}
+                        </Button>
                     </Grid>
                 </Grid>
                 <br/>
-                <DataList cid={currentCid} fileData={fileData} />
+                { !isLoadingData && <DataList cid={currentCid} fileData={fileData} /> }
+                {isLoadingData && <CircularProgress size={42} title={"Loading Data"} />}
             </Container>
         </Box>
 
