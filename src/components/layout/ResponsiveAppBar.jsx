@@ -178,12 +178,9 @@ const ResponsiveAppBar = () => {
                         {pageList}
                     </Box>
 
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            {/*<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>*/}
-                                {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu  }} />}
-                            {/*</IconButton>*/}
-                        </Tooltip>
+                    <Box sx={{ display: "flex", flexGrow: 0 }}>
+                        {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu  }} />}
+                        <Button variant={"text"} sx={{color: "white"}} onClick={() => window.open("https://aurora.picasarts.io", "__blank")}>NFT Marketplace on AURORA</Button>
                         {signedIn && <Menu
                             sx={{mt: '50px'}}
                             id="menu-appbar"
