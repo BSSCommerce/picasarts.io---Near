@@ -72,13 +72,14 @@ export const handleRegisterStorage = async (account) => {
 export const handleSaleUpdate = async (account, token_id, newSaleConditions, isAuction) => {
     const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id }).catch(() => { });
     if (sale) {
+        let saleConditions = Object.entries(newSaleConditions)
         await account.functionCall(marketId, 'update_price', {
             nft_contract_id: contractId,
             token_id,
-            ft_token_id: newSaleConditions[0].ft_token_id,
-            price: newSaleConditions[0].price,
+            ft_token_id: saleConditions[0][0],
+            price: saleConditions[0][1],
             is_auction: isAuction === "1"
-        }, GAS);
+        }, GAS, 1);
     } else {
         await account.functionCall(contractId, 'nft_approve', {
             token_id,
