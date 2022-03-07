@@ -70,7 +70,7 @@ export const handleRegisterStorage = async (account) => {
 };
 
 export const handleSaleUpdate = async (account, token_id, newSaleConditions, isAuction) => {
-    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + token_id }).catch(() => { });
+    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id }).catch(() => { });
     if (sale) {
         await account.functionCall(marketId, 'update_price', {
             nft_contract_id: contractId,
