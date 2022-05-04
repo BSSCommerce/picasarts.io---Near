@@ -30,6 +30,7 @@ A PoC backbone for NFT Marketplaces on NEAR Protocol.
 - [x] show related NFTs item on NFT detailed page.
 - [x] clone token factory and fungible token contracts to approve users create their own token 
 - [x] NFT farming pool: allow artists create farms with rewards are their fungible token then collectors can stake, withdraw NFTs and claim rewards
+- [x] Implement subgraph for activities: https://github.com/dungntbss/picasarts-subgraph
 - [ ] implement use case for NFTs after staking like lending and borrowing
 - [ ] collaborate with other NFT marketplaces for staking.
 - [ ] switch between chains (NEAR, Aurora, XRP, Ethereum...)
