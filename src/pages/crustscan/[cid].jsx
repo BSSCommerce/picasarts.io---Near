@@ -23,10 +23,9 @@ export default function CrustScanCid({cid, crustApi}) {
                 typesBundle: typesBundleForPolkadot,
             });
             await crustApi.isReadyOrError;
-            let fileDataReq = await crustApi.query.market.files(cid);
+            let fileDataReq = await crustApi.query.market.filesV2(cid);
             let fileDataRes = JSON.parse(fileDataReq);
             setFileData(fileDataRes);
-            console.log("fileDataRes", fileDataRes);
         } catch (e) {
             console.log("Could not fetch file data", e);
         }

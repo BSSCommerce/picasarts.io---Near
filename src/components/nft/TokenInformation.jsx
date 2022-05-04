@@ -12,7 +12,7 @@ import {
     MenuItem
 } from "@mui/material";
 import {getTokenOptions, handleOffer, parseNearAmount, token2symbol, handleBuyNow} from "../../state/near";
-import {handleAcceptOffer, handleRegisterStorage, handleSaleUpdate} from "../../state/actions";
+import {handleAcceptOffer, handleRegisterStorage, handleSaleUpdate, handleTransfer} from "../../state/actions";
 import {getMarketStoragePaid, loadItem, loadItems} from '../../state/views';
 import * as nearAPI from "near-api-js";
 import NextLink from "next/link";
@@ -21,6 +21,7 @@ import {formatAccountId} from "../../utils/near-utils";
 const {
     utils: { format: { formatNearAmount } }
 } = nearAPI;
+const validAccount = new RegExp('^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+.testnet$')
 
 export const TokenInformation = ({ app, views, update, contractAccount, account, loading, dispatch, id, viewCount }) => {
 
@@ -33,6 +34,8 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
     const [offerPrice, setOfferPrice] = useState('');
     const [offerToken, setOfferToken] = useState('near');
     const [addOfferErrorMessage, setAddOfferErrorMessage] = useState('');
+    const [receiverId, setReceiverId] = useState('');
+    const [receiverIdErr, setReceiverIdErr] = useState(false);
     /// updating user tokens
     const [price, setPrice] = useState('');
     const [ft, setFT] = useState('near');
@@ -53,6 +56,15 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
             setAddOfferErrorMessage(result);
         }
     }, [addOfferErrorMessage])
+
+    const handleTransferNft = () => {
+        if (!validAccount.test(receiverId)) {
+            setReceiverIdErr(true)
+        } else {
+            setReceiverIdErr(false)
+            handleTransfer(account, receiverId, id)
+        }
+    }
     // useEffect(() => {
     //     if (!loading && token) {
     //        if (token.is_auction) {
@@ -225,7 +237,25 @@ export const TokenInformation = ({ app, views, update, contractAccount, account,
                                 }
                             </div>
                         }
-
+                        {
+                            accountId === token.owner_id && <div className={"section gift-nft"}>
+                                <p className={"section-title"}>Gift this NFT to your friend</p>
+                                <Grid container columns={{ xs: 12 }} spacing={2}>
+                                    <Grid item xs={6}>
+                                        <TextField variant={"standard"} required error={receiverIdErr}
+                                            helperText={receiverIdErr ? "Account ID is invalid" : ""}
+                                            placeholder="Account ID" value={receiverId}
+                                            onChange={(e) => setReceiverId(e.target.value)} />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button variant={"contained"} onClick={handleTransferNft}>Transfer</Button>
+                                    </Grid>
+                                </Grid>
+                                <div>
+                                    <i style={{ fontSize: '0.75rem' }}>Note: You need to confirm your action on NEAR Web Wallet.</i>
+                                </div>
+                            </div>
+                        }
                         <div className={"section token-info"}>
                             <p className="section-title">Token info</p>
                             <div className={"token-info-item"}>

@@ -20,7 +20,8 @@ const initialState = {
 		allTokens: [],
 		currentToken: null,
 		offerErrorMessage: "",
-		isLoadingTokens: true
+		isLoadingTokens: true,
+		isLoadingFarms: true
 	}
 };
 let snackTimeout;

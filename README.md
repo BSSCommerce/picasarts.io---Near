@@ -28,8 +28,13 @@ A PoC backbone for NFT Marketplaces on NEAR Protocol.
 - [x] implement simple collection feature: each near wallet account has a collection name.
 - [x] show collections & NFTs on home page
 - [x] show related NFTs item on NFT detailed page.
+- [x] clone token factory and fungible token contracts to approve users create their own token 
+- [x] NFT farming pool: allow artists create farms with rewards are their fungible token then collectors can stake, withdraw NFTs and claim rewards
+- [ ] implement use case for NFTs after staking like lending and borrowing
+- [ ] collaborate with other NFT marketplaces for staking.
 - [ ] switch between chains (NEAR, Aurora, XRP, Ethereum...)
 - [ ] connect with bridged tokens e.g. buy and sell with wETH/nDAI (or whatever we call these)
+
 
 ## Tech Stack
 - [NextJS 11](https://nextjs.org/)
@@ -65,8 +70,8 @@ Using `src/config.js` you can set up your different environments. Use `REACT_APP
 ## NEAR DEV account
 You need create a NEAR wallet account for testing purpose.
 
-Open neardev/dev-account.dev and change your dev account to build smart contracts. There are two accounts for NFT contract and Market contract.
-NFT contract is built on main account, Market contract is built on sub-account. 
+Open neardev/dev-account.dev and change your dev account to build smart contracts. There are 4 accounts for NFT contract, Market contract, Factory contract and Farming contract.
+NFT contract is built on main account, other contracts is built on sub-account. 
 
 Read this [document](https://docs.near.org/docs/tools/near-cli#near-create-account) to create a sub-account
 
@@ -92,6 +97,10 @@ For tracking page views, this app uses Google Analytic Api. Following steps belo
 
 - `source neardev/dev-account.dev`
 - `npm run build-contract`
+
+***After deploy and init all contracts, nft contract needs to be whitelited with farming contract (only faming contract owner can do this)***
+
+- `near call ${FARMING_CONTRACT_ID} whitelist_nft_contract '{"nft_contract_id": "${NFT_CONTRACT_ID}"} --accountId ${NFT_CONTRACT_ID}'`
 
 **Run Dev Mode for frontend**
 

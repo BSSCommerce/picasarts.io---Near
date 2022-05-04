@@ -1,0 +1,30 @@
+[package]
+name = "farming"
+version = "0.1.0"
+authors = ["Gnud Neit<neitgnud@gmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+near-sdk = "3.1.0"
+near-contract-standards = "3.1.0"
+
+[dev_dependencies]
+near-sdk-sim = "3.1.0"
+
+[profile.release]
+codegen-units = 1
+# Tell `rustc` to optimize for small code size.
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+# Opt into extra safety checks on arithmetic operations https://stackoverflow.com/a/64136471/249801
+overflow-checks = true
+
+[workspace]
+members = []

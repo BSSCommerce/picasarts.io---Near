@@ -5,13 +5,18 @@ import { getWallet, postSignedJson } from '../utils/near-utils';
 import {Select, MenuItem, FormControl, TextField} from "@mui/material";
 
 export const {
-	GAS,
-	explorerUrl,
-	networkId, nodeUrl, walletUrl, nameSuffix,
-	contractName: contractId
+  GAS,
+  explorerUrl,
+  networkId,
+  nodeUrl,
+  walletUrl,
+  nameSuffix,
+  contractName: contractId,
 } = getConfig();
 
-export const marketId = "market1." + contractId;
+export const marketId = "market." + contractId;
+export const farmingId = "farming." + contractId;
+export const factoryId = "factory." + contractId;
 
 export const {
 	utils: {

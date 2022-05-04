@@ -38,6 +38,9 @@ pub struct Contract {
     //keeps track of all the token IDs for a given account
     pub tokens_per_owner: LookupMap<AccountId, UnorderedSet<TokenId>>,
 
+    //keeps track of all the token IDs for a given account
+    pub tokens_per_creator: LookupMap<AccountId, UnorderedSet<TokenId>>,
+
     //keeps track of the token struct for a given token ID
     pub tokens_by_id: LookupMap<TokenId, Token>,
 
@@ -53,6 +56,8 @@ pub struct Contract {
 pub enum StorageKey {
     TokensPerOwner,
     TokenPerOwnerInner { account_id_hash: CryptoHash },
+    TokensPerCreator,
+    TokenPerCreatorInner { account_id_hash: CryptoHash },
     TokensById,
     TokenMetadataById,
     NFTContractMetadata,
@@ -75,8 +80,8 @@ impl Contract {
             owner_id,
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
-                name: "NFT Tutorial Contract".to_string(),
-                symbol: "GOTEAM".to_string(),
+                name: "Picasarts NFT".to_string(),
+                symbol: "BSS".to_string(),
                 icon: None,
                 base_uri: None,
                 reference: None,
@@ -96,6 +101,7 @@ impl Contract {
         let this = Self {
             //Storage keys are simply the prefixes used for the collections. This helps avoid data collision
             tokens_per_owner: LookupMap::new(StorageKey::TokensPerOwner.try_to_vec().unwrap()),
+            tokens_per_creator: LookupMap::new(StorageKey::TokensPerCreator.try_to_vec().unwrap()),
             tokens_by_id: LookupMap::new(StorageKey::TokensById.try_to_vec().unwrap()),
             token_metadata_by_id: UnorderedMap::new(
                 StorageKey::TokenMetadataById.try_to_vec().unwrap(),

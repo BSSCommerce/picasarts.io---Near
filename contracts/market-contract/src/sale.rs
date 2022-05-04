@@ -1,5 +1,6 @@
 use crate::*;
 use near_sdk::promise_result_as_success;
+use near_sdk::serde_json::{ json };
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -37,10 +38,20 @@ impl Contract {
     #[payable]
     pub fn remove_sale(&mut self, nft_contract_id: ValidAccountId, token_id: String) {
         assert_one_yocto();
-        let sale = self.internal_remove_sale(nft_contract_id.into(), token_id);
+        let sale = self.internal_remove_sale(nft_contract_id.into(), token_id.clone());
         let owner_id = env::predecessor_account_id();
         assert_eq!(owner_id, sale.owner_id, "Must be sale owner");
         self.refund_all_bids(&sale.bids);
+        env::log(
+            json!({
+                "type": "SALE:REMOVE",
+                "params": {
+                    "token_id": token_id,
+                }
+            })
+            .to_string()
+            .as_bytes(),
+        );
     }
 
     #[payable]
@@ -65,8 +76,20 @@ impl Contract {
             env::panic(format!("Token {} not supported by this market", ft_token_id).as_bytes());
         }
         sale.is_auction = is_auction;
-        sale.sale_conditions.insert(ft_token_id.into(), price);
+        sale.sale_conditions.insert(ft_token_id.clone().into(), price);
         self.sales.insert(&contract_and_token_id, &sale);
+        env::log(
+            json!({
+                "type": "SALE:UPDATE",
+                "params": {
+                    "token_id": token_id,
+                    "ft_token_id": ft_token_id,
+                    "price": price
+                }
+            })
+            .to_string()
+            .as_bytes(),
+        );
     }
 
     #[payable]
@@ -90,19 +113,33 @@ impl Contract {
         if !sale.is_auction {
             self.process_purchase(
                 contract_id,
-                token_id,
-                ft_token_id,
+                token_id.clone(),
+                ft_token_id.clone(),
                 U128(price),
                 buyer_id,
+            );
+            env::log(
+                json!({
+                    "type": "TRANSFER:BUY",
+                    "params": {
+                        "token_id": token_id.clone(),
+                        "ft_token_id": ft_token_id,
+                        "price": U128(price),
+                        "owner_id": sale.owner_id
+                    }
+                })
+                .to_string()
+                .as_bytes(),
             );
         } else {
             if sale.is_auction && price > 0 {
                 assert!(deposit >= price, "Attached deposit must be greater than reserve price");
             }
+
             self.add_bid(
                 contract_and_token_id,
                 deposit,
-                ft_token_id,
+                ft_token_id.clone(),
                 buyer_id,
                 &mut sale,
             );
@@ -126,6 +163,7 @@ impl Contract {
         
         let bids_for_token_id = sale.bids.entry(ft_token_id.clone()).or_insert_with(Vec::new);
         
+        let mut old_bid = String::from("");
         if !bids_for_token_id.is_empty() {
             let current_bid = &bids_for_token_id[bids_for_token_id.len()-1];
             assert!(
@@ -145,7 +183,23 @@ impl Contract {
                     GAS_FOR_FT_TRANSFER,
                 );
             }
+            old_bid = current_bid.owner_id.clone();
         }
+
+        env::log(
+            json!({
+                "type": "OFFER:ADD_BID",
+                "params": {
+                    "contract_and_token_id": contract_and_token_id,
+                    "price": U128(amount),
+                    "ft_token_id": ft_token_id,
+                    "owner_id": sale.owner_id,
+                    "old_bid_id": old_bid,
+                }
+            })
+            .to_string()
+            .as_bytes(),
+        );
         
         bids_for_token_id.push(new_bid);
         if bids_for_token_id.len() > self.bid_history_length as usize {
@@ -171,10 +225,24 @@ impl Contract {
         // panics at `self.internal_remove_sale` and reverts above if predecessor is not sale.owner_id
         self.process_purchase(
             contract_id,
-            token_id,
-            ft_token_id.into(),
+            token_id.clone(),
+            ft_token_id.clone().into(),
             bid.price,
             bid.owner_id.clone(),
+        );
+
+        env::log(
+            json!({
+                "type": "TRANSFER:BID",
+                "params": {
+                    "token_id": token_id,
+                    "ft_token_id": ft_token_id,
+                    "price": bid.price,
+                    "new_owner_id": bid.owner_id.clone()
+                }
+            })
+            .to_string()
+            .as_bytes(),
         );
     }
 

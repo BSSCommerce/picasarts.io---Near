@@ -40,7 +40,6 @@ export const Minting = ({ near, update, account }) => {
 	const [royalty, setRoyalty] = useState([]);
 	const [receiver, setReceiver] = useState([]);
 
-
 	return (
 		<Container>
 			<Grid container spacing={2}>
@@ -126,7 +125,6 @@ export const Minting = ({ near, update, account }) => {
 						</CardContent>
 					</Card>
 				</Grid>
-
 			</Grid>
 		</Container>)
 }

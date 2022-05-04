@@ -1,4 +1,5 @@
 use crate::*;
+use near_sdk::serde_json::json;
 
 pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     let mut hash = CryptoHash::default();
@@ -24,7 +25,7 @@ impl Contract {
         for (bid_ft, bid_vec) in bids {
             let bid = &bid_vec[bid_vec.len()-1];
             if bid_ft == "near" {
-                    Promise::new(bid.owner_id.clone()).transfer(u128::from(bid.price));
+                Promise::new(bid.owner_id.clone()).transfer(u128::from(bid.price));
             } else {
                 ext_contract::ft_transfer(
                     bid.owner_id.clone(),
@@ -35,6 +36,16 @@ impl Contract {
                     GAS_FOR_FT_TRANSFER,
                 );
             }
+            env::log(
+                json!({
+                    "params": {
+                        "owner_id": bid.owner_id,
+                        "price": bid.price
+                    }
+                })
+                .to_string()
+                .as_bytes(),
+            );
         }
     }
 

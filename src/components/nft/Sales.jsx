@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { getMarketStoragePaid, loadItems } from 'src/state/views';
 import {Grid, Skeleton} from "@mui/material";
 import NftToken from "./NftToken";
+import { farmingId } from 'src/state/near';
 export const Sales = ({ app, views, loading, contractAccount, account, dispatch, numberOfTokens }) => {
     if (!contractAccount) return null;
     const { nearToUsd } = app;
@@ -27,7 +28,9 @@ export const Sales = ({ app, views, loading, contractAccount, account, dispatch,
             (!latestSales.length && !isLoadingTokens) && <>No NFT found</>
         }
         {
-            latestSales.map(({
+            latestSales
+                .filter(({ owner_id }) => owner_id != farmingId)
+                .map(({
                             metadata: { media, title },
                             owner_id,
                             token_id,

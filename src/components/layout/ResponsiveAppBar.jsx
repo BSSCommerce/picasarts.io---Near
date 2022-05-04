@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -11,20 +11,21 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase'
-const pages = ['All NFTs', "Collections", 'Create'];
-const settings = ['Dashboard', 'Settings', 'Logout'];
+import Notification from "./Notification";
 import { appStore } from '../../state/app';
-import {Wallet} from "../nft/Wallet";
+import { Wallet } from "../nft/Wallet";
 import NextLink from 'next/link';
 import logoWhite from "src/public/static/logo_white.svg";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {formatAccountId} from "../../utils/near-utils";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import NearIcon from '../icons/NearIcon';
+import AuroraIcon from '../icons/AuroraIcon';
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -66,13 +67,42 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+
+const pages = [
+    {
+        label: "Explore", children: [
+            { url: "/all-nfts", label: "All NFTs" },
+            { url: "/collections", label: "Collections" },
+            { url: "/activities", label: "Activities" },
+        ]
+    },
+    {
+        label: "Factory", children: [
+            { url: "/factory", label: "All FTs" },
+            { url: "/factory/create", label: "Create new FT" },
+        ]
+    },
+    {
+        label: "Stake", children: [
+            { url: "/stake", label: "All Farm" },
+            { url: "/stake/my-farms", label: "My farms" },
+            { url: "/stake/create", label: "Create new farm" },
+        ]
+    },
+    { url: "/create", label: "Create NFT" },
+];
+
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElPage, setAnchorElPage] = React.useState(null);
+    const [anchorElNetwork, setAnchorElNetwork] = React.useState(null);
+    const [pageOpen, setPageOpen] = React.useState(-1);
+
     const [profile, setProfile] = useState(false);
     const { state, dispatch } = useContext(appStore);
 
-    const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+    const { app, views, app: { tab, snack }, near, wallet, contractAccount, account, loading } = state;
 
     const signedIn = ((wallet && wallet.signedIn));
 
@@ -94,34 +124,78 @@ const ResponsiveAppBar = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-    const pageList = pages.map((page) => {
-            let url = "/";
-            if (page == pages[0]) {
-                url = "/all-nfts";
-            } else if (page == pages[1]) {
-                url = "/collections";
-            } else {
-                url = "/create"
-            }
-            return <MenuItem key={page} onClick={handleCloseNavMenu}>
 
-                <NextLink href={url} as={url}>
-                    <Typography textAlign="center">{page}</Typography>
+    const handleOpenPageMenu = (event, index) => {
+        setAnchorElPage(event.currentTarget);
+        setPageOpen(index);
+    };
+
+    const handleClosePageMenu = () => {
+        setAnchorElPage(null);
+        setPageOpen(-1);
+    };
+
+    const handleOpenNetworkMenu = (event) => {
+        setAnchorElNetwork(event.currentTarget);
+    };
+
+    const handleCloseNetworkMenu = () => {
+        setAnchorElNetwork(null);
+    };
+
+    const pageList = pages.map((page, index) => {
+        if (!page.children) {
+            return <MenuItem key={page.url} onClick={handleCloseNavMenu}>
+                <NextLink href={page.url} as={page.url}>
+                    <Typography textAlign="center">{page.label}</Typography>
                 </NextLink>
-
-
             </MenuItem>
-        })
+        }
+        return <div><Button
+            sx={{ color: 'white', px: 2, textTransform: 'none', fontSize: '1rem', fontWeight: 400 }}
+            key={page.label}
+            aria-controls={page.label}
+            aria-haspopup="true"
+            aria-expanded={pageOpen == index ? 'true' : undefined}
+            disableElevation
+            onClick={(e) => handleOpenPageMenu(e, index)}
+            endIcon={<KeyboardArrowDownIcon />}
+        >
+            {page.label}
+        </Button>
+            <Menu
+                anchorEl={anchorElPage}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={Boolean(anchorElPage) && index == pageOpen}
+                onClose={handleClosePageMenu}
+            >
+                {page.children.map(child =>
+                    <NextLink key={`${child.url}_link`} href={child.url}
+                        as={child.url}>
+                        <MenuItem key={child.url}>
+                            {child.label}
+                        </MenuItem>
+                    </NextLink>
+                )
+                }
+            </Menu>
+        </div >
+    })
     return (
         <AppBar position="sticky">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-
-                        <NextLink href={"/"} as={`/`}>
-                            <img src={logoWhite.src} width={100}/>
-                        </NextLink>
-
-
+                    <NextLink href={"/"} as={`/`}>
+                        <img src={logoWhite.src} width={100} />
+                    </NextLink>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
@@ -154,15 +228,6 @@ const ResponsiveAppBar = () => {
                             {pageList}
                         </Menu>
                     </Box>
-
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-                    >
-                        LOGO
-                    </Typography>
                     <Box sx={{ flexGrow: 1 }}>
                         <Search>
                             <SearchIconWrapper>
@@ -177,12 +242,50 @@ const ResponsiveAppBar = () => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pageList}
                     </Box>
-
+                    <Button
+                        variant={"outlined"}
+                        sx={{ color: "white", borderColor: "white", mr: 1 }}
+                        onClick={handleOpenNetworkMenu}
+                        startIcon={<NearIcon fontSize="small" />}
+                    >
+                        NEAR
+                    </Button>
+                    <Menu
+                        anchorEl={anchorElNetwork}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        open={Boolean(anchorElNetwork)}
+                        onClose={handleCloseNetworkMenu}
+                    >
+                        <MenuItem key={'near'}>
+                            <ListItemIcon>
+                                <NearIcon fontSize={'small'} />
+                            </ListItemIcon>
+                            <Typography textAlign={"Left"}>NEAR</Typography>
+                        </MenuItem>
+                        <NextLink key={'aurora'} href={"https://aurora.picasarts.io"}
+                            as={"https://aurora.picasarts.io"}
+                        >
+                            <MenuItem key={'aurora'}>
+                                <ListItemIcon>
+                                    <AuroraIcon fontSize="small" />
+                                </ListItemIcon>
+                                <Typography textAlign={"Left"}>AURORA</Typography>
+                            </MenuItem>
+                        </NextLink>
+                    </Menu>
+                    {/* {signedIn && <Notification accountId={account.accountId} />} */}
                     <Box sx={{ display: "flex", flexGrow: 0 }}>
-                        {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu  }} />}
-                        <Button variant={"text"} sx={{color: "white"}} onClick={() => window.open("https://aurora.picasarts.io", "__blank")}>NFT Marketplace on AURORA</Button>
+                        {!signedIn ? <Wallet {...{ wallet, account, handleOpenUserMenu }} /> : <Wallet {...{ wallet, account, handleOpenUserMenu }} />}
                         {signedIn && <Menu
-                            sx={{mt: '50px'}}
+                            sx={{ mt: '50px' }}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -199,30 +302,29 @@ const ResponsiveAppBar = () => {
                         >
                             <MenuItem key={"menu-nft-collection"}>
                                 <ListItemIcon>
-                                    <DashboardIcon fontSize="small"/>
+                                    <DashboardIcon fontSize="small" />
                                 </ListItemIcon>
                                 <NextLink key={`${account.accountId}_collection_link`} href={"/collection/[owner_id]"}
-                                          as={`/collection/${account.accountId}`}
-                                          className={"nft-author-name"}><Typography textAlign={"Left"}>My NFTs</Typography></NextLink>
+                                    as={`/collection/${account.accountId}`}
+                                    className={"nft-author-name"}><Typography textAlign={"Left"}>My NFTs</Typography></NextLink>
                             </MenuItem>
                             <MenuItem key={"menu-account-settings"}>
                                 <ListItemIcon>
-                                    <SettingsIcon fontSize="small"/>
+                                    <SettingsIcon fontSize="small" />
                                 </ListItemIcon>
                                 <NextLink href={"/account/settings"}><Typography
                                     textAlign={"Left"}>Settings</Typography></NextLink>
                             </MenuItem>
-                            <Divider/>
+                            <Divider />
                             <MenuItem key={"menu-account-logout"} onClick={() => wallet.signOut()}>
                                 <ListItemIcon>
-                                    <LogoutIcon fontSize="small"/>
+                                    <LogoutIcon fontSize="small" />
                                 </ListItemIcon>
                                 <Typography textAlign={"Left"}>Logout</Typography>
                             </MenuItem>
                         </Menu>
                         }
                     </Box>
-
                 </Toolbar>
             </Container>
         </AppBar>

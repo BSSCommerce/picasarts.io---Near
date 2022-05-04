@@ -73,12 +73,12 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.replicas.map((replica) => (
+                                    {Object.entries(row.replicas).map(([_, replica]) => (
                                         <TableRow key={replica.anchor}>
                                             <TableCell component="th" scope="row">
                                                 <div  style={{maxWidth: "400px", overflowWrap: "break-word"}}>{replica.anchor}</div>
                                             </TableCell>
-                                            <TableCell>{replica.is_reported}</TableCell>
+                                            <TableCell>{replica.is_reported ? "Yes" : "No"}</TableCell>
                                             <TableCell align="right">{replica.valid_at}</TableCell>
                                             <TableCell align="right">
                                                 {replica.who}
@@ -94,8 +94,6 @@ function Row(props) {
         </React.Fragment>
     );
 }
-
-
 
 export default function DataList({cid, fileData}) {
     if (!fileData) {

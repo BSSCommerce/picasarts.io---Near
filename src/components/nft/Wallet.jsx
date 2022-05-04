@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Button from "@mui/material/Button";
-import * as nearAPI from 'near-api-js';
+import NearIcon from '../icons/NearIcon';
 
 export const Wallet = ({ wallet, account, handleOpenUserMenu }) => {
 	if (wallet && wallet.signedIn) {
-		return <div style={{display: "flex"}} onClick={handleOpenUserMenu}>
-			<h4> {account.accountId} | { wallet.balance } N |</h4>
-		</div>;
+		return <Button sx={{ display: "flex", color: "white", textTransform: 'none' }} onClick={handleOpenUserMenu}>
+			{account.accountId} | {wallet.balance} N
+		</Button>;
 	}
 
 	return (

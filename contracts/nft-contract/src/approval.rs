@@ -1,5 +1,6 @@
 use crate::*;
 use near_sdk::{ext_contract, Gas};
+use near_sdk::serde_json::{ json, Value };
 
 const GAS_FOR_NFT_APPROVE: Gas = Gas(10_000_000_000_000);
 const NO_DEPOSIT: Balance = 0;
@@ -80,6 +81,17 @@ impl NonFungibleTokenCore for Contract {
         token.next_approval_id += 1;
         //insert the token back into the tokens_by_id collection
         self.tokens_by_id.insert(&token_id, &token);
+        let msg_json: Value = serde_json::from_str(&msg.clone().unwrap()).unwrap();
+        env::log_str(
+            &json!({
+                "type": "SALE:LISTING",
+                "params": {
+                    "token_id": token_id.clone(),
+                    "sale_conditions": msg_json.get("sale_conditions").unwrap()
+                }
+            })
+            .to_string()
+        );
 
         //refund any excess storage attached by the user. If the user didn't attach enough, panic. 
         refund_deposit(storage_used);

@@ -18,5 +18,13 @@ yarn-error.log*
 /.next
 /contracts/market-contract/target
 /contracts/nft-contract/target
+/contracts/factory-contract/target
+/contracts/farming-contract/target
+/contracts/ft-contract/target
+/contracts/factory-contract/Cargo.lock
+/contracts/farming-contract/Cargo.lock
+/contracts/ft-contract/Cargo.lock
+/contracts/market-contract/Cargo.lock
+
 package-lock.json
 .env
